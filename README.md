@@ -10,13 +10,13 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 
 | To change | Edit in `data/site-data.js` |
 |---|---|
-| Show dates | `shows` — one line per show (`date, venue, city, time, url, status`). Past dates move to "Past Performances" automatically. |
-| Gallery photos | `photos` — add files under `assets/img/gallery/` and list them. |
+| Show dates | `shows` — one line per show (`date, venue, city, time, url, linkText, status`). Past dates move to "Past Performances" automatically. |
+| Gallery photos | `photos` — add files under `assets/img/gallery/` and list them. The Photography section appears once there are two. |
 | Social links | `social` — the Instagram, YouTube and Facebook URLs. They show in the header, the phone menu and the footer. |
 | Music, videos, press kit | `listen`, `watch`, `press` (Phase 2). |
 | Contact form delivery | `contact.endpoint` |
 
-Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows, Photography (one photo so far) and Contact.
+Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows and Contact.
 
 The bio, member names and roles are approved copy and live in `index.html`.
 
@@ -25,7 +25,6 @@ The bio, member names and roles are approved copy and live in `index.html`.
 - **Hero photo.** Until it exists the backdrop is an aubergine gradient. `index.html` has a comment showing where the photo goes.
 - **Member portraits** (4:5). Initials tiles stand in for now; see the comment above the members list in `index.html`.
 - **Gallery photos**, with photographer credits and usage rights.
-- **Show dates.**
 - **Contact form service.** With no `contact.endpoint`, the form opens the visitor's own email app with the message filled in. To have messages delivered directly to phantomlimbs62@gmail.com, create a form endpoint (Formspree, Basin, Netlify Forms or similar), paste its URL into `contact.endpoint`, and turn on that service's spam filtering. The form also carries a hidden trap field named `website`.
 - **Favicon**, and an SVG master of the logo.
 - **Photographer credit and rights** for the group photo in Meet the Band.
@@ -57,7 +56,7 @@ To put it live:
 index.html            page structure and approved copy
 vercel.json           hosting settings
 assets/css/styles.css design tokens at the top, then one block per section
-assets/js/main.js     behaviour: scroll wash, nav, shows + calendar, gallery viewer, form
+assets/js/main.js     behaviour: scroll wash, nav, shows list, gallery viewer, form
 data/site-data.js     the content you edit
 assets/img/           logo, group photo, share image
 ```
@@ -66,7 +65,7 @@ Design notes:
 
 - A fixed backdrop and logo sit behind the whole page. An ivory wash fades in over them as you scroll, and content sits on frosted ivory panels in one centered column.
 - The nav links sit together at the top of the page, then part to show the logo once you scroll past the hero. Under 960px wide they move into a full-screen menu.
-- The calendar appears on screens wider than 720px; phones get the list.
+- Shows is a list of upcoming dates, with past dates in a collapsible "Past Performances" block.
 - Players and videos load only when a visitor presses play, so no third-party content loads with the page. There is no analytics or tracking. Fonts (Fraunces, Inter) load from Google Fonts.
 - Motion is switched off for visitors who ask their device for reduced motion.
 - Search engines get band and show details as structured data, generated from `data/site-data.js`.

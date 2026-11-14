@@ -67,10 +67,14 @@
       <li data-nav="press" hidden><a class="nav__link" href="#press">Press</a></li>
       <li><a class="nav__link" href="#contact">Contact</a></li>
       <li class="nav__social" data-social></li>
+      <li class="nav__book"><a class="book-link" href="#contact">Book</a></li>
     </ul>
-    <button class="nav__toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" data-menu-open>
-      <svg aria-hidden="true" width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h22M0 8h22M0 15h22"/></svg>
-    </button>
+    <div class="nav__end">
+      <a class="book-link" href="#contact">Book</a>
+      <button class="nav__toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" data-menu-open>
+        <svg aria-hidden="true" width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h22M0 8h22M0 15h22"/></svg>
+      </button>
+    </div>
   </nav>
 </header>
 
@@ -98,10 +102,13 @@
       <img src="assets/img/logo.png" alt="Phantom Limbs" width="1109" height="760" fetchpriority="high">
     </picture>
   </h1>
+  <div class="hero__actions">
+  <a class="btn btn--light" href="#contact">Book</a>
   <a class="next-show" href="#shows" hidden data-next-show>
     <span class="eyebrow eyebrow--light">Next show</span>
     <span><span data-next-show-text></span> <span aria-hidden="true">→</span></span>
   </a>
+  </div>
 </div>
 
 <main id="main">
@@ -157,37 +164,6 @@
   <section class="panel" id="shows" aria-labelledby="h-shows">
     <div class="column reveal">
       <h2 class="title" id="h-shows">Shows</h2>
-
-      <div class="calendar" data-calendar>
-        <div class="calendar__bar">
-          <button class="icon-btn" type="button" aria-label="Previous month" data-cal-prev>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
-          </button>
-          <p class="calendar__month" aria-live="polite" data-cal-label></p>
-          <button class="icon-btn" type="button" aria-label="Next month" data-cal-next>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
-          </button>
-        </div>
-        <table class="calendar__grid">
-          <caption class="visually-hidden" data-cal-caption>Show calendar</caption>
-          <thead>
-            <tr>
-              <th scope="col"><abbr title="Sunday">Sun</abbr></th>
-              <th scope="col"><abbr title="Monday">Mon</abbr></th>
-              <th scope="col"><abbr title="Tuesday">Tue</abbr></th>
-              <th scope="col"><abbr title="Wednesday">Wed</abbr></th>
-              <th scope="col"><abbr title="Thursday">Thu</abbr></th>
-              <th scope="col"><abbr title="Friday">Fri</abbr></th>
-              <th scope="col"><abbr title="Saturday">Sat</abbr></th>
-            </tr>
-          </thead>
-          <tbody data-cal-body></tbody>
-        </table>
-        <div class="calendar__empty" role="status" hidden data-cal-empty>
-          <span data-cal-empty-text></span>
-          <button class="text-btn" type="button" hidden data-cal-jump>Go to the next show →</button>
-        </div>
-      </div>
 
       <div class="shows">
         <h3 class="eyebrow">Upcoming</h3>
