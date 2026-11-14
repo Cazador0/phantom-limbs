@@ -266,15 +266,54 @@
     return box;
   }
 
+  /*
+   * Turn an ordinary share link into the player address, so the content file
+   * can hold the link people copy from the app. Returns '' when unsupported.
+   */
+  function playerUrl(link) {
+    var u;
+    try { u = new URL(String(link || '').trim()); } catch (e) { return ''; }
+    if (u.protocol !== 'https:') return '';
+    var host = u.hostname.replace(/^www\./, '');
+    var m;
+    if (host === 'open.spotify.com') {
+      if (/^\/embed\//.test(u.pathname)) return u.href;
+      m = /^\/(?:intl-[a-z-]+\/)?(track|album|playlist|artist|episode)\/([A-Za-z0-9]+)/.exec(u.pathname);
+      return m ? 'https://open.spotify.com/embed/' + m[1] + '/' + m[2] : '';
+    }
+    if (host === 'music.apple.com') return 'https://embed.music.apple.com' + u.pathname + u.search;
+    if (host === 'embed.music.apple.com') return u.href;
+    if (host === 'soundcloud.com') return 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(u.origin + u.pathname) + '&visual=false';
+    if (host === 'w.soundcloud.com') return u.href;
+    if (host === 'bandcamp.com' && /^\/EmbeddedPlayer\//.test(u.pathname)) return u.href;   // Bandcamp: use the link from its "Embed" button
+    return '';
+  }
+
+  /* A YouTube video id from a plain id or any YouTube link (watch, youtu.be, shorts, embed). */
+  function youtubeId(v) {
+    if (v.id && /^[\w-]{6,20}$/.test(v.id)) return v.id;
+    var u;
+    try { u = new URL(String(v.url || '').trim()); } catch (e) { return ''; }
+    var host = u.hostname.replace(/^(www|m)\./, '');
+    var id = '';
+    if (host === 'youtu.be') id = u.pathname.slice(1);
+    else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+      id = u.searchParams.get('v') || (/^\/(?:shorts|embed|live)\/([\w-]+)/.exec(u.pathname) || [])[1] || '';
+    }
+    return /^[\w-]{6,20}$/.test(id) ? id : '';
+  }
+
   function initListen() {
-    var tracks = (Array.isArray(PL.listen) ? PL.listen : []).filter(function (t) { return t && /^https:\/\//i.test(t.embed || ''); });
+    var tracks = (Array.isArray(PL.listen) ? PL.listen : [])
+      .map(function (t) { return t && Object.assign({}, t, { player: playerUrl(t.url || t.embed) }); })
+      .filter(function (t) { return t && t.player; });
     var host = $('[data-listen]');
     tracks.forEach(function (t) {
       host.appendChild(el('li', { class: 'track' }, [
         t.title ? el('p', { class: 'track__title', text: t.title }) : null,
         t.credits ? el('p', { class: 'track__credits', text: t.credits }) : null,
         loader('audio', 'Load player' + (t.title ? ': ' + t.title : ''), '', function () {
-          return el('iframe', { src: t.embed, title: (t.title || 'Track') + ' player', loading: 'lazy', allow: 'encrypted-media', tabindex: '0' });
+          return el('iframe', { src: t.player, title: (t.title || 'Track') + ' player', loading: 'lazy', allow: 'autoplay; encrypted-media; clipboard-write', tabindex: '0' });
         })
       ]));
     });
@@ -282,7 +321,9 @@
   }
 
   function initWatch() {
-    var vids = (Array.isArray(PL.watch) ? PL.watch : []).filter(function (v) { return v && /^[\w-]{6,20}$/.test(v.id || ''); });
+    var vids = (Array.isArray(PL.watch) ? PL.watch : [])
+      .map(function (v) { return v && Object.assign({}, v, { id: youtubeId(v) }); })
+      .filter(function (v) { return v && v.id; });
     var host = $('[data-watch]');
     vids.forEach(function (v) {
       host.appendChild(el('li', {}, [
