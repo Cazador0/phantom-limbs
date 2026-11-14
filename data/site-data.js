@@ -67,12 +67,13 @@ window.PL = {
 
   /*
    * SOCIAL LINKS
-   * Paste the verified profile URLs. An empty link hides its icon.
+   * The band's profile URLs. An empty link hides its icon everywhere
+   * (header, phone menu and footer).
    */
   social: {
-    instagram: "",
-    youtube: "",
-    facebook: ""
+    instagram: "https://www.instagram.com/phantomlimbsdallas/",
+    youtube: "https://www.youtube.com/@phantomlimbsdallas",
+    facebook: "https://www.facebook.com/phantomlimbsdallas"
   },
 
   /*
