@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://phantomlimbsdallas.com/sitemap.xml
+Sitemap: https://phantom-limbs.vercel.app/sitemap.xml
