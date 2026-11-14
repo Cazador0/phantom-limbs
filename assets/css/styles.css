@@ -16,7 +16,7 @@
   --text: var(--ink);
   --text-muted: #3A3140;
   --hairline: #CFC5BB;
-  --panel: rgb(245 240 234 / .84);
+  --panel: rgb(245 240 234 / .74);
   --panel-edge: rgb(255 255 255 / .55);
 
   /* type */
@@ -40,8 +40,8 @@
   --header-h: 72px;
   --column: 760px;
   --wash: 0;                 /* 0..1, set by main.js from scroll position */
-  --wash-color: var(--lilac); /* the tint over the backdrop beside the panels */
-  --wash-max: .85;           /* no hero photo yet */
+  --wash-color: var(--ivory); /* the tint over the backdrop beside the panels */
+  --wash-max: .94;           /* no hero photo yet: the page reads as ivory, as in the design */
   --wash-max-photo: .55;     /* with a hero photo: let it show through */
 }
 
