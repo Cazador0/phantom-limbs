@@ -43,6 +43,37 @@
   }
 
   /* ------------------------------------------------------------------
+     The Members: arrow buttons and edge fades for the scrolling card row
+     ------------------------------------------------------------------ */
+  function initMembers() {
+    var wrap = $('[data-members]');
+    if (!wrap) return;
+    var track = $('.members', wrap);
+    var prev = $('[data-members-prev]', wrap);
+    var next = $('[data-members-next]', wrap);
+    var ticking = false;
+    function state() {
+      ticking = false;
+      var max = track.scrollWidth - track.clientWidth - 2;
+      var atStart = track.scrollLeft <= 2, atEnd = track.scrollLeft >= max;
+      wrap.classList.toggle('at-start', atStart);
+      wrap.classList.toggle('at-end', atEnd);
+      prev.disabled = atStart;
+      next.disabled = atEnd;
+    }
+    function step(dir) {
+      var card = $('.member', track);
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+    prev.addEventListener('click', function () { step(-1); });
+    next.addEventListener('click', function () { step(1); });
+    track.addEventListener('scroll', function () { if (!ticking) { ticking = true; window.requestAnimationFrame(state); } }, { passive: true });
+    window.addEventListener('resize', state);
+    state();
+  }
+
+  /* ------------------------------------------------------------------
      Desktop nav: split the visible links evenly either side of the logo,
      so the row stays balanced whichever sections are showing.
      ------------------------------------------------------------------ */
@@ -458,6 +489,7 @@
     var year = $('[data-year]');
     if (year) year.textContent = String(new Date().getFullYear());
     initSocial();
+    initMembers();
     initMenu();
     var upcoming = initShows();
     initListen();

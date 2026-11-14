@@ -333,15 +333,38 @@ main { position: relative; }
 .group-photo img { width: 100%; border-radius: var(--r-s); }
 
 .members__title { margin-top: 72px; }
+/* The Members: one floating card per member in a sideways-scrolling row.
+   Native scrolling (swipe, trackpad, keyboard) with snap points; arrow
+   buttons step one card at a time; soft fades at the edges hint at more. */
+.members-scroller { position: relative; margin-top: var(--s-5); }
+.members-scroller::before, .members-scroller::after {
+  content: ""; position: absolute; top: 0; bottom: 64px; width: 40px; z-index: 1;
+  pointer-events: none; transition: opacity var(--t-norm) ease;
+}
+.members-scroller::before { left: 0; background: linear-gradient(90deg, var(--panel-solid), transparent); }
+.members-scroller::after { right: 0; background: linear-gradient(-90deg, var(--panel-solid), transparent); }
+.members-scroller.at-start::before, .members-scroller.at-end::after { opacity: 0; }
 .members {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: var(--s-6) var(--s-4);
-  margin-top: var(--s-6); padding: 0 var(--s-6);
+  display: flex; gap: var(--s-4);
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--s-6);
+  padding: var(--s-3) var(--s-6) var(--s-6);
+  scrollbar-width: none;
 }
+.members::-webkit-scrollbar { display: none; }
+.members:focus-visible { outline-offset: -4px; border-radius: var(--r-m); }
 .member {
-  flex: 1 1 124px; max-width: 200px; min-width: 0;
+  flex: 0 0 clamp(180px, 29%, 216px);
+  scroll-snap-align: start;
   display: flex; flex-direction: column; gap: var(--s-2); text-align: center;
+  padding: var(--s-2) var(--s-2) var(--s-4);
+  border-radius: var(--r-m);
+  background: #FBF8F4;
+  box-shadow: 0 1px 2px rgb(27 21 33 / .06), 0 10px 24px -10px rgb(27 21 33 / .28);
 }
+.members__controls { display: flex; justify-content: center; gap: var(--s-3); }
+.members__controls .icon-btn[disabled] { opacity: .35; cursor: default; }
+/* portrait sits inside the card */
 .member__portrait {
   position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s);
   background: linear-gradient(160deg, var(--aubergine), var(--ink));
@@ -511,8 +534,8 @@ main { position: relative; }
   .hero { padding-bottom: var(--s-7); }
   .group-photo { margin-top: 40px; padding: 0; max-width: none; }
   .group-photo img { border-radius: 0; }
-  .members { gap: var(--s-6) var(--s-4); padding: 0 var(--s-5); }
-  .member { flex: 0 0 calc(50% - var(--s-2)); max-width: none; }
+  .members { padding-inline: var(--s-5); scroll-padding-inline: var(--s-5); }
+  .member { flex-basis: 68%; }
   .form { padding: 20px; }
   .hero__actions { flex-direction: column; }
   .next-show { border-radius: 16px; padding: var(--s-3) 18px; flex-direction: column; }
