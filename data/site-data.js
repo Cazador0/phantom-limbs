@@ -47,20 +47,36 @@ window.PL = {
 
   /*
    * LISTEN (Phase 2)
-   * One entry per track. Players load only when the visitor presses play.
+   * One entry per track, album or playlist. Players load only when the
+   * visitor presses play. The section appears once there is one entry.
    *
    *   title   "Track title"
    *   credits "optional line"
-   *   embed   the player's embed URL (Spotify, Bandcamp, SoundCloud, ...)
+   *   url     the share link, copied from the app:
+   *             Spotify      https://open.spotify.com/track/...  (album/playlist too)
+   *             Apple Music  https://music.apple.com/us/album/...
+   *             SoundCloud   https://soundcloud.com/artist/track
+   *             Bandcamp     press Share/Embed on the track, then copy the
+   *                          address inside src="..." (bandcamp.com/EmbeddedPlayer/...)
+   *
+   * Example:
+   *   { title: "Track title", credits: "", url: "https://open.spotify.com/track/..." },
+   *
+   * Several bands share the name Phantom Limbs on streaming services:
+   * copy links from the band's own profile.
    */
   listen: [],
 
   /*
    * WATCH (Phase 2)
-   * YouTube video ids. The first one is the featured video.
+   * YouTube videos, in the order to show them. The section appears once
+   * there is one entry.
    *
-   *   id      "dQw4w9WgXcQ"   (the part after v= in the YouTube link)
+   *   url     the YouTube link (youtube.com/watch?v=..., youtu.be/..., or a Shorts link)
    *   title   "Video title"
+   *
+   * Example:
+   *   { title: "Live at ...", url: "https://youtu.be/..." },
    */
   watch: [],
 
