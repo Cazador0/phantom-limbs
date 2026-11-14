@@ -43,14 +43,14 @@
   }
 
   /* ------------------------------------------------------------------
-     The Members: arrow buttons and edge fades for the scrolling card row
+     The Band: arrow buttons and edge fades for the scrolling card row
      ------------------------------------------------------------------ */
-  function initMembers() {
-    var wrap = $('[data-members]');
+  function initBand() {
+    var wrap = $('[data-band]');
     if (!wrap) return;
-    var track = $('.members', wrap);
-    var prev = $('[data-members-prev]', wrap);
-    var next = $('[data-members-next]', wrap);
+    var track = $('.band', wrap);
+    var prev = $('[data-band-prev]', wrap);
+    var next = $('[data-band-next]', wrap);
     var ticking = false;
     function state() {
       ticking = false;
@@ -62,13 +62,13 @@
       next.disabled = atEnd;
     }
     function step(dir) {
-      var card = $('.member', track);
+      var card = $('.band-member', track);
       var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
       track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: reduceMotion ? 'auto' : 'smooth' });
     }
     prev.addEventListener('click', function () { step(-1); });
     next.addEventListener('click', function () { step(1); });
-    initMemberDialog(track);
+    initBandMemberDialog(track);
     track.addEventListener('scroll', function () { if (!ticking) { ticking = true; window.requestAnimationFrame(state); } }, { passive: true });
     window.addEventListener('resize', state);
     state();
@@ -80,32 +80,32 @@
    * text never stretches). Prev/next, arrow keys and swipes step through
    * the members without closing.
    */
-  function initMemberDialog(track) {
-    var dialog = $('[data-member-dialog]');
+  function initBandMemberDialog(track) {
+    var dialog = $('[data-band-member-dialog]');
     if (!dialog || !dialog.showModal) return;
-    var cards = $$('.member__card', track);
-    var big = $('[data-member-card]', dialog);
-    var portrait = $('[data-member-portrait]', dialog);
-    var nameEl = $('[data-member-name]', dialog);
-    var roleEl = $('[data-member-role]', dialog);
-    var count = $('[data-member-count]', dialog);
+    var cards = $$('.band-member__card', track);
+    var big = $('[data-band-member-card]', dialog);
+    var portrait = $('[data-band-member-portrait]', dialog);
+    var nameEl = $('[data-band-member-name]', dialog);
+    var roleEl = $('[data-band-member-role]', dialog);
+    var count = $('[data-band-member-count]', dialog);
     var index = 0, closing = false;
     var EASE = 'cubic-bezier(.2,.7,.2,1)';
 
     function paint() {
       var card = cards[index];
-      var src = $('.member__portrait', card);
+      var src = $('.band-member__portrait', card);
       portrait.textContent = '';
       portrait.setAttribute('data-initials', src.getAttribute('data-initials') || '');
       var img = $('img', src);
       if (img) {
         var copy = img.cloneNode(true);
         copy.removeAttribute('loading');
-        copy.alt = $('.member__name', card).textContent;
+        copy.alt = $('.band-member__name', card).textContent;
         portrait.appendChild(copy);
       }
-      nameEl.textContent = $('.member__name', card).textContent;
-      roleEl.textContent = $('.member__role', card).textContent;
+      nameEl.textContent = $('.band-member__name', card).textContent;
+      roleEl.textContent = $('.band-member__role', card).textContent;
       count.textContent = (index + 1) + ' of ' + cards.length;
     }
 
@@ -148,9 +148,9 @@
     }
 
     cards.forEach(function (c, i) { c.addEventListener('click', function () { open(i); }); });
-    $('[data-member-close]', dialog).addEventListener('click', close);
-    $('[data-member-prev]', dialog).addEventListener('click', function () { go(-1); });
-    $('[data-member-next]', dialog).addEventListener('click', function () { go(1); });
+    $('[data-band-member-close]', dialog).addEventListener('click', close);
+    $('[data-band-member-prev]', dialog).addEventListener('click', function () { go(-1); });
+    $('[data-band-member-next]', dialog).addEventListener('click', function () { go(1); });
     dialog.addEventListener('cancel', function (e) { e.preventDefault(); close(); });          // Escape
     dialog.addEventListener('click', function (e) { if (e.target === dialog) close(); });       // backdrop
     dialog.addEventListener('keydown', function (e) {
@@ -591,7 +591,7 @@
       foundingLocation: { '@type': 'Place', name: 'Dallas, TX' },
       genre: ['R&B', 'Funk', 'Rock'],
       member: [
-        ['Tiff Cassius-Baucum', 'Lead vocals'], ['Joren Cain', 'Keyboards / guitar'], ['Danny Enriquez', 'Guitar / vocals'],
+        ['Tiffany Baucum', 'Lead vocals'], ['Joren Cain', 'Keyboards / guitar'], ['Danny Enriquez', 'Guitar / vocals'],
         ['Robert Tracy', 'Bass'], ['Kei Tabuchi', 'Drums']
       ].map(function (m) { return { '@type': 'OrganizationRole', roleName: m[1], member: { '@type': 'Person', name: m[0] } }; }),
       sameAs: socialLinks().map(function (l) { return l.url; })
@@ -623,7 +623,7 @@
     var year = $('[data-year]');
     if (year) year.textContent = String(new Date().getFullYear());
     initSocial();
-    initMembers();
+    initBand();
     initMenu();
     var upcoming = initShows();
     initListen();

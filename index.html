@@ -121,7 +121,7 @@
       <h2 class="title title--caps" id="h-band">MEET PHANTOM LIMBS.</h2>
       <div class="prose">
         <p class="lede">Dallas band Phantom Limbs brings together an eclectic mix of musical influences and backgrounds, blending elements of R&amp;B, funk, rock and beyond.</p>
-        <p>Keyboardist/guitarist Joren Cain and guitarist Danny Enriquez, the principal songwriters behind beloved DFW jazz outfit Lovers &amp; Lunatics (2018–2026), have joined forces with three accomplished musicians: vocalist Tiff Cassius-Baucum, drummer Kei Tabuchi and bassist Robert Tracy.</p>
+        <p>Keyboardist/guitarist Joren Cain and guitarist Danny Enriquez, the principal songwriters behind beloved DFW jazz group Lovers &amp; Lunatics (2018–2026), have joined forces with three accomplished musicians: vocalist Tiffany Baucum, drummer Kei Tabuchi and bassist Robert Tracy.</p>
         <p>Together, they create a sound shaped by distinct perspectives, unexpected connections and a shared appetite for musical exploration.</p>
       </div>
     </div>
@@ -133,26 +133,26 @@
       </picture>
     </figure>
 
-    <h3 class="eyebrow eyebrow--center members__title">The Members</h3>
+    <h3 class="eyebrow eyebrow--center band__title">The Band</h3>
     <!--
       PORTRAITS (pending): to add one, put a 4:5 image inside the member's
-      .member__portrait, e.g.
+      .band-member__portrait, e.g.
         <img src="assets/img/members/tiff.jpg" alt="" width="800" height="1000" loading="lazy">
       The initials tile disappears once an image is there.
     -->
-    <div class="members-scroller reveal" data-members>
-    <ul class="members" id="members-track" tabindex="0" aria-label="Band members, scrolls sideways">
-      <li class="member"><button class="member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Tiff Cassius-Baucum"><div class="member__portrait" data-initials="TC"></div><span class="member__name">Tiff Cassius-Baucum</span><span class="member__role">Lead vocals</span></button></li>
-      <li class="member"><button class="member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Joren Cain"><div class="member__portrait" data-initials="JC"></div><span class="member__name">Joren Cain</span><span class="member__role">Keyboards / guitar</span></button></li>
-      <li class="member"><button class="member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Danny Enriquez"><div class="member__portrait" data-initials="DE"></div><span class="member__name">Danny Enriquez</span><span class="member__role">Guitar / vocals</span></button></li>
-      <li class="member"><button class="member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Robert Tracy"><div class="member__portrait" data-initials="RT"></div><span class="member__name">Robert Tracy</span><span class="member__role">Bass</span></button></li>
-      <li class="member"><button class="member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Kei Tabuchi"><div class="member__portrait" data-initials="KT"></div><span class="member__name">Kei Tabuchi</span><span class="member__role">Drums</span></button></li>
+    <div class="band-scroller reveal" data-band>
+    <ul class="band" id="band-track" tabindex="0" aria-label="Band members, scrolls sideways">
+      <li class="band-member"><button class="band-member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Tiffany Baucum"><div class="band-member__portrait" data-initials="TC"></div><span class="band-member__name">Tiff Cassius-Baucum</span><span class="band-member__role">Lead vocals</span></button></li>
+      <li class="band-member"><button class="band-member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Joren Cain"><div class="band-member__portrait" data-initials="JC"></div><span class="band-member__name">Joren Cain</span><span class="band-member__role">Keyboards / guitar</span></button></li>
+      <li class="band-member"><button class="band-member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Danny Enriquez"><div class="band-member__portrait" data-initials="DE"></div><span class="band-member__name">Danny Enriquez</span><span class="band-member__role">Guitar / vocals</span></button></li>
+      <li class="band-member"><button class="band-member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Robert Tracy"><div class="band-member__portrait" data-initials="RT"></div><span class="band-member__name">Robert Tracy</span><span class="band-member__role">Bass</span></button></li>
+      <li class="band-member"><button class="band-member__card" type="button" aria-haspopup="dialog" aria-label="Enlarge Kei Tabuchi"><div class="band-member__portrait" data-initials="KT"></div><span class="band-member__name">Kei Tabuchi</span><span class="band-member__role">Drums</span></button></li>
     </ul>
-    <div class="members__controls">
-      <button class="icon-btn" type="button" aria-controls="members-track" aria-label="Previous member" data-members-prev>
+    <div class="band__controls">
+      <button class="icon-btn" type="button" aria-controls="band-track" aria-label="Previous member" data-band-prev>
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
       </button>
-      <button class="icon-btn" type="button" aria-controls="members-track" aria-label="Next member" data-members-next>
+      <button class="icon-btn" type="button" aria-controls="band-track" aria-label="Next member" data-band-next>
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
       </button>
     </div>
@@ -275,20 +275,20 @@
   </div>
 </footer>
 
-<dialog class="member-dialog" aria-labelledby="member-dialog-name" data-member-dialog>
-  <div class="member-dialog__card" data-member-card>
-    <button class="icon-btn member-dialog__close" type="button" aria-label="Close" data-member-close>
+<dialog class="band-member-dialog" aria-labelledby="band-member-dialog-name" data-band-member-dialog>
+  <div class="band-member-dialog__card" data-band-member-card>
+    <button class="icon-btn band-member-dialog__close" type="button" aria-label="Close" data-band-member-close>
       <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l12 12M13 1L1 13"/></svg>
     </button>
-    <div class="member__portrait member-dialog__portrait" data-member-portrait></div>
-    <h3 class="member-dialog__name" id="member-dialog-name" data-member-name></h3>
-    <p class="member__role" data-member-role></p>
-    <div class="member-dialog__nav">
-      <button class="icon-btn" type="button" aria-label="Previous member" data-member-prev>
+    <div class="band-member__portrait band-member-dialog__portrait" data-band-member-portrait></div>
+    <h3 class="band-member-dialog__name" id="band-member-dialog-name" data-band-member-name></h3>
+    <p class="band-member__role" data-band-member-role></p>
+    <div class="band-member-dialog__nav">
+      <button class="icon-btn" type="button" aria-label="Previous member" data-band-member-prev>
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
       </button>
-      <span class="member-dialog__count" aria-live="polite" data-member-count></span>
-      <button class="icon-btn" type="button" aria-label="Next member" data-member-next>
+      <span class="band-member-dialog__count" aria-live="polite" data-band-member-count></span>
+      <button class="icon-btn" type="button" aria-label="Next member" data-band-member-next>
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
       </button>
     </div>
