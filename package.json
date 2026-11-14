@@ -1,0 +1,23 @@
+{
+  "name": "phantom-limbs",
+  "version": "1.0.0",
+  "description": "The official website for Phantom Limbs, a five-piece band from Dallas (phantomlimbsdallas.com).",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests configured\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cazador0/phantom-limbs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cazador0/phantom-limbs/issues"
+  },
+  "homepage": "https://github.com/Cazador0/phantom-limbs#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
