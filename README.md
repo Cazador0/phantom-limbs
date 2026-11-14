@@ -10,11 +10,11 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 
 | To change | Edit in `data/site-data.js` |
 |---|---|
-| Show dates | `shows` — one line per show (`date, venue, city, time, url, linkText, status`). Past dates move to "Past Performances" automatically. |
+| Show dates | `shows` — one line per show (`date, venue, city, time, support, url, linkText, status`). Past dates move to "Past Performances" automatically. |
 | Gallery photos | `photos` — add files under `assets/img/gallery/` and list them. The Photography section appears once there are two. |
 | Social links | `social` — the Instagram, YouTube and Facebook URLs. They show in the header, the phone menu and the footer. |
 | Music, videos, press kit | `listen`, `watch`, `press` (Phase 2). |
-| Contact form delivery | `contact.endpoint` |
+| Contact address | `contact.email` |
 
 Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows and Contact.
 
@@ -25,10 +25,9 @@ The bio, member names and roles are approved copy and live in `index.html`.
 - **Hero photo.** Until it exists the backdrop is an aubergine gradient. `index.html` has a comment showing where the photo goes.
 - **Member portraits** (4:5). Initials tiles stand in for now; see the comment above the members list in `index.html`.
 - **Gallery photos**, with photographer credits and usage rights.
-- **Contact form service.** With no `contact.endpoint`, the form opens the visitor's own email app with the message filled in. To have messages delivered directly to phantomlimbs62@gmail.com, create a form endpoint (Formspree, Basin, Netlify Forms or similar), paste its URL into `contact.endpoint`, and turn on that service's spam filtering. The form also carries a hidden trap field named `website`.
+- **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
 - **Favicon**, and an SVG master of the logo.
 - **Photographer credit and rights** for the group photo in Meet the Band.
-- **Empty-state wording.** "No upcoming shows right now." is placeholder microcopy, not approved copy.
 
 ## Running it locally
 
