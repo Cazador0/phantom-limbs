@@ -9,20 +9,24 @@ window.PL = {
   /*
    * SHOWS
    * One entry per show, in any order. The page sorts them, moves past dates
-   * into "Past Performances" on its own, and fills the calendar and the
-   * "Next show" line in the hero.
+   * into "Past Performances" on its own, and fills the "Next show" line
+   * in the hero.
    *
    *   date    "YYYY-MM-DD"                      required
    *   venue   "Venue name"                      required
    *   city    "Dallas, TX"                      required
    *   time    "8:00 PM"                         optional
    *   url     "https://tickets.example/..."     optional (ticket or event link)
+   *   linkText "Details"                        optional, the link's words (default "Tickets")
    *   status  "confirmed" | "sold-out" | "cancelled"   optional, default "confirmed"
    *
    * Example:
    *   { date: "2027-01-16", venue: "Venue name", city: "Dallas, TX", time: "8:00 PM", url: "", status: "confirmed" },
    */
-  shows: [],
+  shows: [
+    { date: "2026-11-14", venue: "Guitars & Growlers", city: "Flower Mound, TX", time: "7–10 PM",
+      url: "https://www.facebook.com/photo?fbid=122098164825549757&set=a.122098165113549757", linkText: "Details", status: "confirmed" }
+  ],
 
   /*
    * PHOTOGRAPHY

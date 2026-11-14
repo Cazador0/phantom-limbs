@@ -51,7 +51,8 @@
     var right = $('.nav__group--right');
     if (!left || !right) return;
     var social = $('.nav__social', right);
-    var items = $$('li', left).concat($$('li', right)).filter(function (li) { return li !== social; });
+    var book = $('.nav__book', right);
+    var items = $$('li', left).concat($$('li', right)).filter(function (li) { return li !== social && li !== book; });
     var visible = items.filter(function (li) { return !li.hidden; });
     var half = Math.ceil(visible.length / 2);
     var seen = 0;
@@ -165,7 +166,6 @@
     return d.getMonth() === +m[2] - 1 ? d : null;
   }
   function fmt(date, opts) { return date.toLocaleDateString('en-US', opts); }
-  function sameMonth(a, y, m) { return a.getFullYear() === y && a.getMonth() === m; }
 
   function initShows() {
     var today = new Date(); today.setHours(0, 0, 0, 0);
@@ -178,18 +178,19 @@
 
     // Upcoming list
     var list = $('[data-upcoming]');
-    upcoming.forEach(function (s, i) {
+    upcoming.forEach(function (s) {
       var meta = [s.city, s.time].filter(Boolean).join(' · ');
       var badge = s.status === 'cancelled' ? 'Cancelled' : s.status === 'sold-out' ? 'Sold out' : '';
       var url = s.status === 'cancelled' ? '' : safeUrl(s.url);
-      var li = el('li', { class: 'show' + (s.status === 'cancelled' ? ' show--cancelled' : ''), 'data-show': i }, [
+      var linkText = s.linkText || (s.status === 'sold-out' ? 'Details' : 'Tickets');
+      var li = el('li', { class: 'show' + (s.status === 'cancelled' ? ' show--cancelled' : '') }, [
         el('span', { class: 'show__date', text: fmt(s.when, { weekday: 'short', month: 'short', day: 'numeric' }) }),
         el('span', { class: 'show__where' }, [
           el('span', { text: s.venue }),
           meta ? el('span', { class: 'show__meta', text: meta }) : null
         ]),
         badge ? el('span', { class: 'show__badge', text: badge }) : null,
-        url ? el('a', { class: 'show__link', href: url, rel: 'noopener', text: (s.status === 'sold-out' ? 'Details' : 'Tickets') + ' →', 'aria-label': (s.status === 'sold-out' ? 'Details' : 'Tickets') + ' for ' + s.venue + ', ' + fmt(s.when, { month: 'long', day: 'numeric' }) }) : null
+        url ? el('a', { class: 'show__link', href: url, rel: 'noopener', text: linkText + ' →', 'aria-label': linkText + ' for ' + s.venue + ', ' + fmt(s.when, { month: 'long', day: 'numeric' }) }) : null
       ]);
       list.appendChild(li);
     });
@@ -210,79 +211,7 @@
       chip.hidden = false;
     }
 
-    initCalendar(upcoming, live, today);
     return upcoming;
-  }
-
-  function initCalendar(upcoming, live, today) {
-    var body = $('[data-cal-body]');
-    if (!body) return;
-    var label = $('[data-cal-label]');
-    var caption = $('[data-cal-caption]');
-    var empty = $('[data-cal-empty]');
-    var emptyText = $('[data-cal-empty-text]');
-    var jump = $('[data-cal-jump]');
-    var view = new Date(today.getFullYear(), today.getMonth(), 1);
-
-    function select(index) {
-      $$('.show').forEach(function (li) { li.classList.toggle('is-selected', li.getAttribute('data-show') === String(index)); });
-      $$('.cal-show', body).forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-show') === String(index) ? 'true' : 'false'); });
-      var row = $('.show[data-show="' + index + '"]');
-      if (row) row.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
-    }
-
-    function render() {
-      var y = view.getFullYear(), m = view.getMonth();
-      var name = fmt(view, { month: 'long', year: 'numeric' });
-      label.textContent = name;
-      caption.textContent = 'Show calendar, ' + name;
-      body.textContent = '';
-      var lead = view.getDay();
-      var days = new Date(y, m + 1, 0).getDate();
-      var cells = Math.ceil((lead + days) / 7) * 7;
-      var count = 0;
-      var tr;
-      for (var i = 0; i < cells; i++) {
-        if (i % 7 === 0) { tr = el('tr'); body.appendChild(tr); }
-        var d = i - lead + 1;
-        var td = el('td');
-        if (d >= 1 && d <= days) {
-          var idx = -1;
-          for (var k = 0; k < upcoming.length; k++) {
-            if (upcoming[k].status !== 'cancelled' && sameMonth(upcoming[k].when, y, m) && upcoming[k].when.getDate() === d) { idx = k; break; }
-          }
-          if (idx >= 0) {
-            count++;
-            var s = upcoming[idx];
-            var btn = el('button', { class: 'cal-show', type: 'button', 'data-show': idx, 'aria-pressed': 'false', 'aria-label': 'Show on ' + fmt(s.when, { month: 'long', day: 'numeric' }) + ': ' + s.venue }, [
-              el('span', { class: 'cal-show__num', text: String(d) }),
-              el('span', { class: 'cal-show__venue', text: s.venue })
-            ]);
-            btn.addEventListener('click', (function (n) { return function () { select(n); }; })(idx));
-            td.appendChild(btn);
-          } else {
-            var isToday = sameMonth(today, y, m) && today.getDate() === d;
-            td.appendChild(el('span', { class: 'cal-day' + (isToday ? ' cal-day--today' : ''), text: String(d), 'aria-current': isToday ? 'date' : null }));
-          }
-        }
-        tr.appendChild(td);
-      }
-      var next = live.length ? live[0].when : null;
-      emptyText.textContent = 'No shows in ' + name + '.';
-      show(empty, count === 0);
-      show(jump, count === 0 && !!next && !sameMonth(next, y, m));
-    }
-
-    $('[data-cal-prev]').addEventListener('click', function () { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
-    $('[data-cal-next]').addEventListener('click', function () { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
-    jump.addEventListener('click', function () {
-      if (!live.length) return;
-      view = new Date(live[0].when.getFullYear(), live[0].when.getMonth(), 1);
-      render();
-      var first = $('.cal-show', body);
-      if (first) first.focus();
-    });
-    render();
   }
 
   /* ------------------------------------------------------------------
@@ -354,8 +283,9 @@
     var photos = (Array.isArray(PL.photos) ? PL.photos : []).filter(function (p) { return p && safeUrl(p.src); });
     var host = $('[data-gallery]');
     var viewer = $('[data-viewer]');
-    setSection('photography', photos.length > 0);
-    if (!photos.length || !viewer) return;
+    // One photo is already shown in Meet the Band; the gallery appears from two.
+    setSection('photography', photos.length > 1);
+    if (photos.length < 2 || !viewer) return;
 
     var img = $('[data-viewer-img]', viewer);
     var count = $('[data-viewer-count]', viewer);
