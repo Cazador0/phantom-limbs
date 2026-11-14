@@ -41,12 +41,22 @@ python3 -m http.server 8000
 
 ## Hosting
 
-Any static host works (GitHub Pages, Netlify, Cloudflare Pages). No hosting or domain settings are committed here. `robots.txt`, `sitemap.xml`, the canonical link and the share-image tags assume the site is served from `https://phantomlimbsdallas.com/`; change them if that differs.
+The site is set up for **Vercel**. `vercel.json` needs no build: it serves the folder as it is, adds a few security headers, and lets browsers keep images for a day.
+
+To put it live:
+
+1. In Vercel, choose **Add New → Project** and import this repository.
+2. Leave the framework preset on **Other**, with no build command and no output directory.
+3. Deploy. Every push to `main` then publishes the site, and every pull request gets its own preview link.
+4. Add `phantomlimbsdallas.com` under the project's **Domains** and point the domain's DNS at Vercel as it instructs.
+
+`robots.txt`, `sitemap.xml`, the canonical link and the share-image tags assume the site is served from `https://phantomlimbsdallas.com/`; change them if that differs.
 
 ## How it is put together
 
 ```
 index.html            page structure and approved copy
+vercel.json           hosting settings
 assets/css/styles.css design tokens at the top, then one block per section
 assets/js/main.js     behaviour: scroll wash, nav, shows + calendar, gallery viewer, form
 data/site-data.js     the content you edit
