@@ -371,7 +371,11 @@
       count.textContent = 'Photo ' + (index + 1) + ' of ' + photos.length;
       credit.textContent = p.credit ? 'Photo: ' + p.credit : '';
     }
-    function go(step) { index = (index + step + photos.length) % photos.length; paint(); }
+    function go(step) { if (photos.length > 1) { index = (index + step + photos.length) % photos.length; paint(); } }
+    // With a single photo there is nothing to page through.
+    show($('[data-viewer-prev]', viewer), photos.length > 1);
+    show($('[data-viewer-next]', viewer), photos.length > 1);
+    show(count, photos.length > 1);
 
     photos.forEach(function (p, i) {
       var btn = el('button', { class: 'gallery__tile', type: 'button', 'aria-label': 'Open photo ' + (i + 1) + ' of ' + photos.length + (p.alt ? ': ' + p.alt : '') }, [

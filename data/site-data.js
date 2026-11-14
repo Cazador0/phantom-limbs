@@ -33,7 +33,9 @@ window.PL = {
    *   alt     short description of the photo    required
    *   credit  "Photographer name"               optional, shown in the viewer
    */
-  photos: [],
+  photos: [
+    { src: "assets/img/group-1091.jpg", width: 1091, height: 1442, alt: "Phantom Limbs, all five members, seated on a staircase", credit: "" }
+  ],
 
   /*
    * LISTEN (Phase 2)
