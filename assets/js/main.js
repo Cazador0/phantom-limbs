@@ -187,6 +187,7 @@
         el('span', { class: 'show__date', text: fmt(s.when, { weekday: 'short', month: 'short', day: 'numeric' }) }),
         el('span', { class: 'show__where' }, [
           el('span', { text: s.venue }),
+          s.support ? el('span', { class: 'show__support', text: 'with ' + s.support }) : null,
           meta ? el('span', { class: 'show__meta', text: meta }) : null
         ]),
         badge ? el('span', { class: 'show__badge', text: badge }) : null,
@@ -345,18 +346,21 @@
      ------------------------------------------------------------------ */
   var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+  /*
+   * Email goes through the visitor's own email app (a mailto: link), so no
+   * outside service sees it and nothing runs on the server. Their app sends it
+   * from their own address, which is where the band's reply goes.
+   */
   function initForm() {
     var form = $('[data-form]');
     if (!form) return;
     var contact = PL.contact || {};
     var email = EMAIL_RE.test(contact.email || '') ? contact.email : 'phantomlimbs62@gmail.com';
-    var endpoint = /^https:\/\//i.test(contact.endpoint || '') ? contact.endpoint : '';
-    var submit = $('[data-submit]', form);
-    var errorMsg = $('[data-form-error]', form);
     var done = $('[data-form-done]');
-    var doneTitle = $('[data-form-done-title]');
-    var doneNote = $('[data-form-done-note]');
+    var copyBtn = $('[data-form-copy]');
+    var copyStatus = $('[data-form-copy-status]');
     var fields = ['name', 'email', 'message'];
+    var lastDraft = '';
 
     $$('[data-email-link]').forEach(function (a) { a.href = 'mailto:' + email; a.textContent = email; });
 
@@ -374,44 +378,31 @@
       input.addEventListener('input', function () { if (input.hasAttribute('aria-invalid') && !invalid(name)) mark(name, false); });
     });
 
-    function finish(title, note) {
-      doneTitle.textContent = title;
-      doneNote.textContent = note || '';
-      show(doneNote, !!note);
-      form.hidden = true;
-      done.hidden = false;
-      done.focus();
-    }
-    function busy(on) {
-      submit.disabled = on;
-      submit.textContent = on ? 'Sending…' : 'Send Message';
-    }
-
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      show(errorMsg, false);
       if (value('website')) return;                     // spam trap: real visitors never fill this
       var bad = fields.filter(invalid);
       fields.forEach(function (name) { mark(name, bad.indexOf(name) >= 0); });
       if (bad.length) { form.elements[bad[0]].focus(); return; }
 
-      var subject = form.elements.subject.value || 'General';
+      var subject = '[' + (form.elements.subject.value || 'General') + '] Phantom Limbs website';
+      var body = value('message') + '\n\n' + value('name') + '\n' + value('email');
+      lastDraft = 'To: ' + email + '\nSubject: ' + subject + '\n\n' + body;
 
-      if (!endpoint) {
-        // No form service configured: hand the message to the visitor's own email app.
-        var body = value('message') + '\n\n' + value('name') + '\n' + value('email');
-        window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent('[' + subject + '] Phantom Limbs website') + '&body=' + encodeURIComponent(body);
-        finish('Almost there.', 'Your email app should have opened with the message ready to send. If it did not, email ' + email + ' directly.');
-        return;
-      }
+      window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 
-      busy(true);
-      var data = new FormData(form);
-      data.delete('website');
-      fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); })
-        .then(function () { busy(false); form.reset(); finish('Message sent.'); })
-        .catch(function () { busy(false); show(errorMsg, true); submit.focus(); });
+      form.hidden = true;
+      done.hidden = false;
+      copyStatus.textContent = '';
+      done.focus();
+    });
+
+    // For visitors with no email app set up: copy the whole message to paste into webmail.
+    copyBtn.addEventListener('click', function () {
+      function ok() { copyStatus.textContent = 'Copied. Paste it into a new email to ' + email + '.'; }
+      function fail() { copyStatus.textContent = 'Copy didn\'t work here. Please email ' + email + ' directly.'; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastDraft).then(ok, fail);
+      else fail();
     });
 
     $('[data-form-reset]').addEventListener('click', function () {
@@ -452,7 +443,7 @@
         eventStatus: 'https://schema.org/' + (s.status === 'cancelled' ? 'EventCancelled' : 'EventScheduled'),
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         location: { '@type': 'MusicVenue', name: s.venue, address: s.city || undefined },
-        performer: { '@type': 'MusicGroup', name: 'Phantom Limbs', url: site }
+        performer: [{ '@type': 'MusicGroup', name: 'Phantom Limbs', url: site }].concat(s.support ? [{ '@type': 'PerformingGroup', name: s.support }] : [])
       };
       var url = safeUrl(s.url);
       if (url) ev.offers = { '@type': 'Offer', url: url, availability: 'https://schema.org/' + (s.status === 'sold-out' ? 'SoldOut' : 'InStock') };

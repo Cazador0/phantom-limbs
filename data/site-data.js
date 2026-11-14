@@ -18,6 +18,7 @@ window.PL = {
    *   time    "8:00 PM"                         optional
    *   url     "https://tickets.example/..."     optional (ticket or event link)
    *   linkText "Details"                        optional, the link's words (default "Tickets")
+   *   support "Artist name"                     optional, shown as "with Artist name"
    *   status  "confirmed" | "sold-out" | "cancelled"   optional, default "confirmed"
    *
    * Example:
@@ -25,6 +26,7 @@ window.PL = {
    */
   shows: [
     { date: "2026-11-14", venue: "Guitars & Growlers", city: "Flower Mound, TX", time: "7–10 PM",
+      support: "Jeffrey Michael Widman",
       url: "https://www.facebook.com/photo?fbid=122098164825549757&set=a.122098165113549757", linkText: "Details", status: "confirmed" }
   ],
 
@@ -82,12 +84,10 @@ window.PL = {
 
   /*
    * CONTACT FORM
-   * endpoint: URL of a form service that accepts a POST (Formspree, Basin,
-   * Netlify Forms, a serverless function, ...). While this is empty the form
-   * opens the visitor's own email app with the message filled in.
+   * The form opens the visitor's own email app with their message filled in,
+   * addressed to this email. No outside email service is used.
    */
   contact: {
-    email: "phantomlimbs62@gmail.com",
-    endpoint: ""
+    email: "phantomlimbs62@gmail.com"
   }
 };

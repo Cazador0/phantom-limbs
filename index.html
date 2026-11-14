@@ -235,14 +235,19 @@
 
         <div class="form__actions">
           <button class="btn" type="submit" data-submit>Send Message</button>
-          <p class="form__status" role="alert" hidden data-form-error>The message didn't send. Please try again, or email the band directly below.</p>
+          <p class="form__note">Opens your email app with the message ready to send.</p>
         </div>
       </form>
 
       <div class="form-done" role="status" tabindex="-1" hidden data-form-done>
-        <p class="form-done__title" data-form-done-title>Message sent.</p>
-        <p class="form-done__note" hidden data-form-done-note></p>
-        <button class="text-btn" type="button" data-form-reset>Send another →</button>
+        <p class="form-done__title">Almost there.</p>
+        <p>Your email app should have opened with the message ready. Press send there to reach the band.</p>
+        <p class="form-done__note">No email app opened? Copy the message and paste it into a new email.</p>
+        <div class="form-done__actions">
+          <button class="btn" type="button" data-form-copy>Copy message</button>
+          <button class="text-btn" type="button" data-form-reset>Edit or send another →</button>
+        </div>
+        <p class="form-done__copied" aria-live="polite" data-form-copy-status></p>
       </div>
 
       <p class="contact__direct">Or email <a href="mailto:phantomlimbs62@gmail.com" data-email-link>phantomlimbs62@gmail.com</a> <span aria-hidden="true">→</span></p>
