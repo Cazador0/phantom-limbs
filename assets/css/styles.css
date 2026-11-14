@@ -334,74 +334,74 @@ main { position: relative; }
 .group-photo { max-width: 624px; margin: var(--s-8) auto 0; padding: 0 var(--s-6); }
 .group-photo img { width: 100%; border-radius: var(--r-s); }
 
-.members__title { margin-top: 72px; }
-/* The Members: one floating card per member in a sideways-scrolling row.
+.band__title { margin-top: 72px; }
+/* The Band: one floating card per member in a sideways-scrolling row.
    Native scrolling (swipe, trackpad, keyboard) with snap points; arrow
    buttons step one card at a time; soft fades at the edges hint at more. */
-.members-scroller { position: relative; margin-top: var(--s-5); }
-.members-scroller::before, .members-scroller::after {
+.band-scroller { position: relative; margin-top: var(--s-5); }
+.band-scroller::before, .band-scroller::after {
   content: ""; position: absolute; top: 0; bottom: 64px; width: 40px; z-index: 1;
   pointer-events: none; transition: opacity var(--t-norm) ease;
 }
-.members-scroller::before { left: 0; background: linear-gradient(90deg, var(--panel-solid), transparent); }
-.members-scroller::after { right: 0; background: linear-gradient(-90deg, var(--panel-solid), transparent); }
-.members-scroller.at-start::before, .members-scroller.at-end::after { opacity: 0; }
-.members {
+.band-scroller::before { left: 0; background: linear-gradient(90deg, var(--panel-solid), transparent); }
+.band-scroller::after { right: 0; background: linear-gradient(-90deg, var(--panel-solid), transparent); }
+.band-scroller.at-start::before, .band-scroller.at-end::after { opacity: 0; }
+.band {
   display: flex; gap: var(--s-4);
   overflow-x: auto; overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory; scroll-padding-inline: var(--s-6);
   padding: var(--s-3) var(--s-6) var(--s-6);
   scrollbar-width: none;
 }
-.members::-webkit-scrollbar { display: none; }
-.members:focus-visible { outline-offset: -4px; border-radius: var(--r-m); }
-.member {
+.band::-webkit-scrollbar { display: none; }
+.band:focus-visible { outline-offset: -4px; border-radius: var(--r-m); }
+.band-member {
   flex: 0 0 clamp(180px, 29%, 216px);
   scroll-snap-align: start;
   display: flex;
 }
-.member__card {
+.band-member__card {
   flex: 1; display: flex; flex-direction: column; gap: var(--s-2); text-align: center;
   padding: var(--s-2) var(--s-2) var(--s-4); border: 0;
   border-radius: var(--r-m); background: var(--surface-raised); color: inherit;
   box-shadow: var(--shadow-float); cursor: zoom-in;
   transition: box-shadow var(--t-fast) ease;
 }
-.member__card:hover { box-shadow: 0 1px 2px rgb(27 21 33 / .08), 0 16px 32px -12px rgb(27 21 33 / .36); }
-.member__card:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
-.member__card .member__portrait { width: 100%; }
-.members__controls { display: flex; justify-content: center; gap: var(--s-3); }
-.members__controls .icon-btn[disabled] { opacity: .35; cursor: default; }
+.band-member__card:hover { box-shadow: 0 1px 2px rgb(27 21 33 / .08), 0 16px 32px -12px rgb(27 21 33 / .36); }
+.band-member__card:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+.band-member__card .band-member__portrait { width: 100%; }
+.band__controls { display: flex; justify-content: center; gap: var(--s-3); }
+.band__controls .icon-btn[disabled] { opacity: .35; cursor: default; }
 /* portrait sits inside the card */
-.member__portrait {
+.band-member__portrait {
   position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s);
   background: linear-gradient(160deg, var(--aubergine), var(--ink));
 }
-.member__portrait:empty::after {
+.band-member__portrait:empty::after {
   content: attr(data-initials);
   position: absolute; inset: 0; display: grid; place-items: center;
   color: rgb(245 240 234 / .5); font: 400 1.75rem/1 var(--font-display); letter-spacing: .06em;
 }
-.member__portrait img { width: 100%; height: 100%; object-fit: cover; }
-.member__name { margin-top: 2px; font: 500 1.125rem/1.15 var(--font-display); text-wrap: balance; }
-.member__role {
+.band-member__portrait img { width: 100%; height: 100%; object-fit: cover; }
+.band-member__name { margin-top: 2px; font: 500 1.125rem/1.15 var(--font-display); text-wrap: balance; }
+.band-member__role {
   font: 600 .6875rem/1.3 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
   color: var(--aubergine);
 }
 
 /* The enlarged member card: the same floating card, bigger, over a dimmed page.
    It grows out of the card that was pressed (main.js) and shrinks back on close. */
-.member-dialog {
+.band-member-dialog {
   width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: var(--s-5);
   background: transparent; color: var(--text); overflow: auto;
 }
-.member-dialog[open] { display: grid; place-items: center; }
-.member-dialog::backdrop {
+.band-member-dialog[open] { display: grid; place-items: center; }
+.band-member-dialog::backdrop {
   background: rgb(27 21 33 / .55);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-.member-dialog[open]::backdrop { animation: fade-in var(--t-norm) ease both; }
-.member-dialog__card {
+.band-member-dialog[open]::backdrop { animation: fade-in var(--t-norm) ease both; }
+.band-member-dialog__card {
   position: relative;
   width: min(440px, 100%, calc((100dvh - 240px) * .8));
   min-width: min(260px, 100%);
@@ -411,15 +411,15 @@ main { position: relative; }
   box-shadow: 0 2px 4px rgb(27 21 33 / .08), 0 30px 60px -20px rgb(27 21 33 / .5);
   transform-origin: center;
 }
-.member-dialog__portrait { border-radius: var(--r-m); }
-.member-dialog__portrait:empty::after { font-size: 3.5rem; }
-.member-dialog__name { margin-top: var(--s-2); font: 500 clamp(1.5rem, 1.2rem + 1.2vw, 2rem)/1.1 var(--font-display); text-wrap: balance; }
-.member-dialog__close {
+.band-member-dialog__portrait { border-radius: var(--r-m); }
+.band-member-dialog__portrait:empty::after { font-size: 3.5rem; }
+.band-member-dialog__name { margin-top: var(--s-2); font: 500 clamp(1.5rem, 1.2rem + 1.2vw, 2rem)/1.1 var(--font-display); text-wrap: balance; }
+.band-member-dialog__close {
   position: absolute; top: var(--s-4); right: var(--s-4); z-index: 1;
   background: rgb(251 248 244 / .85); border-color: transparent;
 }
-.member-dialog__nav { display: flex; align-items: center; justify-content: center; gap: var(--s-4); margin-top: var(--s-2); }
-.member-dialog__count { min-width: 4.5em; font-size: var(--fs-small); color: var(--text-muted); }
+.band-member-dialog__nav { display: flex; align-items: center; justify-content: center; gap: var(--s-4); margin-top: var(--s-2); }
+.band-member-dialog__count { min-width: 4.5em; font-size: var(--fs-small); color: var(--text-muted); }
 
 /* ---------- Listen / Watch ---------- */
 .stack { display: flex; flex-direction: column; gap: var(--s-5); }
@@ -574,8 +574,8 @@ main { position: relative; }
   .hero { padding-bottom: var(--s-7); }
   .group-photo { margin-top: 40px; padding: 0; max-width: none; }
   .group-photo img { border-radius: 0; }
-  .members { padding-inline: var(--s-5); scroll-padding-inline: var(--s-5); }
-  .member { flex-basis: 68%; }
+  .band { padding-inline: var(--s-5); scroll-padding-inline: var(--s-5); }
+  .band-member { flex-basis: 68%; }
   .form { padding: 20px; }
   .hero__actions { flex-direction: column; }
   .next-show { border-radius: 16px; padding: var(--s-3) 18px; flex-direction: column; }
@@ -597,7 +597,7 @@ main { position: relative; }
 
 /* ---------- Print ---------- */
 @media print {
-  .backdrop, .wash, .site-header, .hero__actions, dialog, .form, .members__controls { display: none !important; }
+  .backdrop, .wash, .site-header, .hero__actions, dialog, .form, .band__controls { display: none !important; }
   .hero { min-height: 0; padding: 0; }
   .hero__logo { position: static; transform: none; width: 60%; margin: 0 auto; }
   .panel { border: 0; background: none; padding: var(--s-5) 0; }
