@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phantom Limbs</title>
+<meta name="description" content="Dallas band Phantom Limbs brings together an eclectic mix of musical influences and backgrounds, blending elements of R&amp;B, funk, rock and beyond.">
+<link rel="canonical" href="https://phantomlimbsdallas.com/">
+<meta name="theme-color" content="#1B1521">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phantom Limbs">
+<meta property="og:title" content="Phantom Limbs">
+<meta property="og:description" content="Dallas band Phantom Limbs brings together an eclectic mix of musical influences and backgrounds, blending elements of R&amp;B, funk, rock and beyond.">
+<meta property="og:url" content="https://phantomlimbsdallas.com/">
+<meta property="og:image" content="https://phantomlimbsdallas.com/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Phantom Limbs logo">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/img/logo-1109.webp" type="image/webp" imagesrcset="assets/img/logo-640.webp 640w, assets/img/logo-1109.webp 1109w" imagesizes="(max-width: 820px) 82vw, 760px">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#band">Skip to content</a>
+
+<!--
+  Fixed backdrop: stays in place behind the whole page, with the hero logo fixed
+  on top of it. As the visitor scrolls, main.js raises --wash so the ivory .wash
+  layer fades in over both.
+
+  HERO PHOTO (pending): when the approved photo exists, add it inside
+  .backdrop__photo, before the logo, like this:
+
+    <picture>
+      <source media="(max-width: 820px)" srcset="assets/img/hero-mobile.webp" type="image/webp">
+      <source srcset="assets/img/hero-1600.webp 1600w, assets/img/hero-2400.webp 2400w" sizes="100vw" type="image/webp">
+      <img src="assets/img/hero-1600.jpg" alt="" width="2400" height="1600" fetchpriority="high">
+    </picture>
+-->
+<div class="backdrop" aria-hidden="true">
+  <div class="backdrop__photo"></div>
+  <div class="backdrop__shade"></div>
+</div>
+<div class="wash" aria-hidden="true"></div>
+
+<header class="site-header" data-header>
+  <nav class="nav" aria-label="Main">
+    <ul class="nav__group nav__group--left">
+      <li><a class="nav__link" href="#top">Home</a></li>
+      <li><a class="nav__link" href="#band">Meet the Band</a></li>
+      <li data-nav="listen" hidden><a class="nav__link" href="#listen">Listen</a></li>
+      <li data-nav="watch" hidden><a class="nav__link" href="#watch">Watch</a></li>
+      <li><a class="nav__link" href="#shows">Shows</a></li>
+    </ul>
+    <a class="nav__logo" href="#top" aria-label="Phantom Limbs, back to top" tabindex="-1" data-nav-logo>
+      <img src="assets/img/logo-240.webp" alt="" width="240" height="164">
+    </a>
+    <ul class="nav__group nav__group--right">
+      <li data-nav="photography" hidden><a class="nav__link" href="#photography">Photography</a></li>
+      <li data-nav="press" hidden><a class="nav__link" href="#press">Press</a></li>
+      <li><a class="nav__link" href="#contact">Contact</a></li>
+      <li class="nav__social" data-social></li>
+    </ul>
+    <button class="nav__toggle" type="button" aria-label="Open menu" aria-haspopup="dialog" data-menu-open>
+      <svg aria-hidden="true" width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 1h22M0 8h22M0 15h22"/></svg>
+    </button>
+  </nav>
+</header>
+
+<dialog class="menu" aria-label="Menu" data-menu>
+  <button class="icon-btn icon-btn--light menu__close" type="button" aria-label="Close menu" data-menu-close>
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l12 12M13 1L1 13"/></svg>
+  </button>
+  <ul class="menu__list">
+    <li><a href="#top">Home</a></li>
+    <li><a href="#band">Meet the Band</a></li>
+    <li data-nav="listen" hidden><a href="#listen">Listen</a></li>
+    <li data-nav="watch" hidden><a href="#watch">Watch</a></li>
+    <li><a href="#shows">Shows</a></li>
+    <li data-nav="photography" hidden><a href="#photography">Photography</a></li>
+    <li data-nav="press" hidden><a href="#press">Press</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="menu__social" data-social></div>
+</dialog>
+
+<div class="hero" id="top" data-hero>
+  <h1 class="hero__logo">
+    <picture>
+      <source type="image/webp" srcset="assets/img/logo-640.webp 640w, assets/img/logo-1109.webp 1109w" sizes="(max-width: 820px) 82vw, 760px">
+      <img src="assets/img/logo.png" alt="Phantom Limbs" width="1109" height="760" fetchpriority="high">
+    </picture>
+  </h1>
+  <a class="next-show" href="#shows" hidden data-next-show>
+    <span class="eyebrow eyebrow--light">Next show</span>
+    <span><span data-next-show-text></span> <span aria-hidden="true">→</span></span>
+  </a>
+</div>
+
+<main id="main">
+
+  <section class="panel" id="band" aria-labelledby="h-band">
+    <div class="column reveal">
+      <p class="eyebrow">Meet the Band</p>
+      <h2 class="title title--caps" id="h-band">MEET PHANTOM LIMBS.</h2>
+      <div class="prose">
+        <p class="lede">Dallas band Phantom Limbs brings together an eclectic mix of musical influences and backgrounds, blending elements of R&amp;B, funk, rock and beyond.</p>
+        <p>Keyboardist/guitarist Joren Cain and guitarist Danny Enriquez, the principal songwriters behind beloved DFW jazz outfit Lovers &amp; Lunatics (2018–2026), have joined forces with three accomplished musicians: vocalist Tiff Cassius-Baucum, drummer Kei Tabuchi and bassist Robert Tracy.</p>
+        <p>Together, they create a sound shaped by distinct perspectives, unexpected connections and a shared appetite for musical exploration.</p>
+      </div>
+    </div>
+
+    <figure class="group-photo reveal">
+      <picture>
+        <source type="image/webp" srcset="assets/img/group-720.webp 720w, assets/img/group-1091.webp 1091w" sizes="(max-width: 600px) 92vw, 560px">
+        <img src="assets/img/group-1091.jpg" srcset="assets/img/group-720.jpg 720w, assets/img/group-1091.jpg 1091w" sizes="(max-width: 600px) 92vw, 560px" alt="Phantom Limbs, all five members, seated on a staircase" width="1091" height="1442" loading="lazy" decoding="async">
+      </picture>
+    </figure>
+
+    <h3 class="eyebrow eyebrow--center members__title">The Members</h3>
+    <!--
+      PORTRAITS (pending): to add one, put a 4:5 image inside the member's
+      .member__portrait, e.g.
+        <img src="assets/img/members/tiff.jpg" alt="" width="800" height="1000" loading="lazy">
+      The initials tile disappears once an image is there.
+    -->
+    <ul class="members reveal">
+      <li class="member"><div class="member__portrait" data-initials="TC"></div><span class="member__name">Tiff Cassius-Baucum</span><span class="member__role">Lead vocals</span></li>
+      <li class="member"><div class="member__portrait" data-initials="JC"></div><span class="member__name">Joren Cain</span><span class="member__role">Keyboards / guitar</span></li>
+      <li class="member"><div class="member__portrait" data-initials="DE"></div><span class="member__name">Danny Enriquez</span><span class="member__role">Guitar / vocals</span></li>
+      <li class="member"><div class="member__portrait" data-initials="RT"></div><span class="member__name">Robert Tracy</span><span class="member__role">Bass</span></li>
+      <li class="member"><div class="member__portrait" data-initials="KT"></div><span class="member__name">Kei Tabuchi</span><span class="member__role">Drums</span></li>
+    </ul>
+  </section>
+
+  <section class="panel" id="listen" aria-labelledby="h-listen" hidden>
+    <div class="column reveal">
+      <h2 class="title" id="h-listen">Listen</h2>
+      <ul class="stack" data-listen></ul>
+    </div>
+  </section>
+
+  <section class="panel" id="watch" aria-labelledby="h-watch" hidden>
+    <div class="column reveal">
+      <h2 class="title" id="h-watch">Watch</h2>
+      <ul class="stack" data-watch></ul>
+    </div>
+  </section>
+
+  <section class="panel" id="shows" aria-labelledby="h-shows">
+    <div class="column reveal">
+      <h2 class="title" id="h-shows">Shows</h2>
+
+      <div class="calendar" data-calendar>
+        <div class="calendar__bar">
+          <button class="icon-btn" type="button" aria-label="Previous month" data-cal-prev>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
+          </button>
+          <p class="calendar__month" aria-live="polite" data-cal-label></p>
+          <button class="icon-btn" type="button" aria-label="Next month" data-cal-next>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
+          </button>
+        </div>
+        <table class="calendar__grid">
+          <caption class="visually-hidden" data-cal-caption>Show calendar</caption>
+          <thead>
+            <tr>
+              <th scope="col"><abbr title="Sunday">Sun</abbr></th>
+              <th scope="col"><abbr title="Monday">Mon</abbr></th>
+              <th scope="col"><abbr title="Tuesday">Tue</abbr></th>
+              <th scope="col"><abbr title="Wednesday">Wed</abbr></th>
+              <th scope="col"><abbr title="Thursday">Thu</abbr></th>
+              <th scope="col"><abbr title="Friday">Fri</abbr></th>
+              <th scope="col"><abbr title="Saturday">Sat</abbr></th>
+            </tr>
+          </thead>
+          <tbody data-cal-body></tbody>
+        </table>
+        <div class="calendar__empty" role="status" hidden data-cal-empty>
+          <span data-cal-empty-text></span>
+          <button class="text-btn" type="button" hidden data-cal-jump>Go to the next show →</button>
+        </div>
+      </div>
+
+      <div class="shows">
+        <h3 class="eyebrow">Upcoming</h3>
+        <ul class="show-list" data-upcoming></ul>
+        <div class="shows__none" hidden data-no-shows>
+          <p class="shows__none-line">No upcoming shows right now.</p>
+          <p class="shows__none-follow" hidden data-follow>Follow the band for new dates: <span data-follow-links></span></p>
+        </div>
+        <details class="past" hidden data-past-wrap>
+          <summary>Past Performances</summary>
+          <ul class="past__list" data-past></ul>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="photography" aria-labelledby="h-photo" hidden>
+    <div class="column reveal">
+      <h2 class="title" id="h-photo">Photography</h2>
+      <ul class="gallery" aria-label="Gallery" data-gallery></ul>
+    </div>
+  </section>
+
+  <section class="panel" id="press" aria-labelledby="h-press" hidden>
+    <div class="column column--center reveal">
+      <h2 class="title" id="h-press">Press</h2>
+      <p class="press__intro" hidden data-press-intro></p>
+      <a class="btn" href="#" data-press-kit>Download Press Kit</a>
+      <p>Booking: <a href="mailto:phantomlimbs62@gmail.com" data-email-link>phantomlimbs62@gmail.com</a></p>
+    </div>
+  </section>
+
+  <section class="panel" id="contact" aria-labelledby="h-contact">
+    <div class="column">
+      <h2 class="title" id="h-contact">Contact / Booking</h2>
+
+      <form class="form reveal" novalidate data-form>
+        <div class="form__trap" aria-hidden="true">
+          <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <div class="field">
+          <label for="f-name">Name <span class="field__req">(required)</span></label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="err-name">
+          <p class="field__error" id="err-name" hidden>Enter your name.</p>
+        </div>
+
+        <div class="field">
+          <label for="f-email">Email <span class="field__req">(required)</span></label>
+          <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="err-email">
+          <p class="field__error" id="err-email" hidden>Enter a valid email address.</p>
+        </div>
+
+        <fieldset class="field chips">
+          <legend>Subject</legend>
+          <div class="chips__row">
+            <label class="chip"><input type="radio" name="subject" value="Booking" checked><span>Booking</span></label>
+            <label class="chip"><input type="radio" name="subject" value="General"><span>General</span></label>
+            <label class="chip"><input type="radio" name="subject" value="Press"><span>Press</span></label>
+            <label class="chip"><input type="radio" name="subject" value="Other"><span>Other</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="f-message">Message <span class="field__req">(required)</span></label>
+          <textarea id="f-message" name="message" rows="6" required aria-describedby="err-message"></textarea>
+          <p class="field__error" id="err-message" hidden>Enter a message.</p>
+        </div>
+
+        <div class="form__actions">
+          <button class="btn" type="submit" data-submit>Send Message</button>
+          <p class="form__status" role="alert" hidden data-form-error>The message didn't send. Please try again, or email the band directly below.</p>
+        </div>
+      </form>
+
+      <div class="form-done" role="status" tabindex="-1" hidden data-form-done>
+        <p class="form-done__title" data-form-done-title>Message sent.</p>
+        <p class="form-done__note" hidden data-form-done-note></p>
+        <button class="text-btn" type="button" data-form-reset>Send another →</button>
+      </div>
+
+      <p class="contact__direct">Or email <a href="mailto:phantomlimbs62@gmail.com" data-email-link>phantomlimbs62@gmail.com</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p>© <span data-year>2026</span> Phantom Limbs</p>
+    <div class="site-footer__social" data-social></div>
+  </div>
+</footer>
+
+<dialog class="viewer" aria-label="Photo viewer" data-viewer>
+  <div class="viewer__panel">
+    <div class="viewer__stage" data-viewer-stage>
+      <img alt="" data-viewer-img>
+    </div>
+    <div class="viewer__bar">
+      <p class="viewer__meta"><span data-viewer-count></span><span data-viewer-credit></span></p>
+      <div class="viewer__controls">
+        <button class="icon-btn icon-btn--light" type="button" aria-label="Previous photo" data-viewer-prev>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
+        </button>
+        <button class="icon-btn icon-btn--light" type="button" aria-label="Next photo" data-viewer-next>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
+        <button class="icon-btn icon-btn--light" type="button" aria-label="Close viewer" data-viewer-close>
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l12 12M13 1L1 13"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script src="data/site-data.js"></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
