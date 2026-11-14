@@ -16,7 +16,7 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 | Music, videos, press kit | `listen`, `watch`, `press` (Phase 2). |
 | Contact form delivery | `contact.endpoint` |
 
-Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows and Contact.
+Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows, Photography (one photo so far) and Contact.
 
 The bio, member names and roles are approved copy and live in `index.html`.
 

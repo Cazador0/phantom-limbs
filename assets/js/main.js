@@ -43,6 +43,26 @@
   }
 
   /* ------------------------------------------------------------------
+     Desktop nav: split the visible links evenly either side of the logo,
+     so the row stays balanced whichever sections are showing.
+     ------------------------------------------------------------------ */
+  function balanceNav() {
+    var left = $('.nav__group--left');
+    var right = $('.nav__group--right');
+    if (!left || !right) return;
+    var social = $('.nav__social', right);
+    var items = $$('li', left).concat($$('li', right)).filter(function (li) { return li !== social; });
+    var visible = items.filter(function (li) { return !li.hidden; });
+    var half = Math.ceil(visible.length / 2);
+    var seen = 0;
+    items.forEach(function (li) {
+      var side = seen < half ? left : right;
+      if (!li.hidden) seen++;
+      if (side === right && social) right.insertBefore(li, social); else side.appendChild(li);
+    });
+  }
+
+  /* ------------------------------------------------------------------
      Social links
      ------------------------------------------------------------------ */
   var ICONS = {
@@ -351,7 +371,11 @@
       count.textContent = 'Photo ' + (index + 1) + ' of ' + photos.length;
       credit.textContent = p.credit ? 'Photo: ' + p.credit : '';
     }
-    function go(step) { index = (index + step + photos.length) % photos.length; paint(); }
+    function go(step) { if (photos.length > 1) { index = (index + step + photos.length) % photos.length; paint(); } }
+    // With a single photo there is nothing to page through.
+    show($('[data-viewer-prev]', viewer), photos.length > 1);
+    show($('[data-viewer-next]', viewer), photos.length > 1);
+    show(count, photos.length > 1);
 
     photos.forEach(function (p, i) {
       var btn = el('button', { class: 'gallery__tile', type: 'button', 'aria-label': 'Open photo ' + (i + 1) + ' of ' + photos.length + (p.alt ? ': ' + p.alt : '') }, [
@@ -522,6 +546,7 @@
     initGallery();
     initForm();
     initStructuredData(upcoming);
+    balanceNav();
     initScroll();       // last: section visibility is settled by now
   }
 
