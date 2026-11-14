@@ -140,13 +140,23 @@
         <img src="assets/img/members/tiff.jpg" alt="" width="800" height="1000" loading="lazy">
       The initials tile disappears once an image is there.
     -->
-    <ul class="members reveal">
+    <div class="members-scroller reveal" data-members>
+    <ul class="members" id="members-track" tabindex="0" aria-label="Band members, scrolls sideways">
       <li class="member"><div class="member__portrait" data-initials="TC"></div><span class="member__name">Tiff Cassius-Baucum</span><span class="member__role">Lead vocals</span></li>
       <li class="member"><div class="member__portrait" data-initials="JC"></div><span class="member__name">Joren Cain</span><span class="member__role">Keyboards / guitar</span></li>
       <li class="member"><div class="member__portrait" data-initials="DE"></div><span class="member__name">Danny Enriquez</span><span class="member__role">Guitar / vocals</span></li>
       <li class="member"><div class="member__portrait" data-initials="RT"></div><span class="member__name">Robert Tracy</span><span class="member__role">Bass</span></li>
       <li class="member"><div class="member__portrait" data-initials="KT"></div><span class="member__name">Kei Tabuchi</span><span class="member__role">Drums</span></li>
     </ul>
+    <div class="members__controls">
+      <button class="icon-btn" type="button" aria-controls="members-track" aria-label="Previous member" data-members-prev>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
+      </button>
+      <button class="icon-btn" type="button" aria-controls="members-track" aria-label="Next member" data-members-next>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
+      </button>
+    </div>
+    </div>
   </section>
 
   <section class="panel" id="listen" aria-labelledby="h-listen" hidden>
