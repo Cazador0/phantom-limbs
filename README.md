@@ -26,7 +26,6 @@ The bio, member names and roles are approved copy and live in `index.html`.
 - **Member portraits** (4:5). Initials tiles stand in for now; see the comment above the members list in `index.html`.
 - **Gallery photos**, with photographer credits and usage rights.
 - **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
-- **Favicon.** The current icons in `assets/img/icons/` and `favicon.ico` are provisional, made from the logo on aubergine. Replace them with the final design when it exists, keeping the file names.
 - **An SVG master of the logo.**
 - **Photographer credit and rights** for the group photo in Meet the Band.
 
@@ -58,7 +57,7 @@ vercel.json           hosting settings
 assets/css/styles.css design tokens at the top, then one block per section
 assets/js/main.js     behaviour: scroll wash, nav, shows list, gallery viewer, form
 data/site-data.js     the content you edit
-assets/img/           logo, group photo, share image, icons
+assets/img/           logo, group photo, share image, icons (browser tab: the logo itself; phone home screen: the logo on aubergine)
 ```
 
 Design notes:
