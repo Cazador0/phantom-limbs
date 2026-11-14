@@ -26,7 +26,8 @@ The bio, member names and roles are approved copy and live in `index.html`.
 - **Member portraits** (4:5). Initials tiles stand in for now; see the comment above the members list in `index.html`.
 - **Gallery photos**, with photographer credits and usage rights.
 - **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
-- **Favicon**, and an SVG master of the logo.
+- **Favicon.** The current icons in `assets/img/icons/` and `favicon.ico` are provisional, made from the logo on aubergine. Replace them with the final design when it exists, keeping the file names.
+- **An SVG master of the logo.**
 - **Photographer credit and rights** for the group photo in Meet the Band.
 
 ## Running it locally
@@ -47,7 +48,7 @@ To put it live:
 3. Deploy. Every push to `main` then publishes the site, and every pull request gets its own preview link.
 4. Add `phantomlimbsdallas.com` under the project's **Domains** and point the domain's DNS at Vercel as it instructs.
 
-`robots.txt`, `sitemap.xml`, the canonical link and the share-image tags assume the site is served from `https://phantomlimbsdallas.com/`; change them if that differs.
+Search and sharing currently point at `https://phantom-limbs.vercel.app/`. Once phantomlimbsdallas.com is connected, replace that address in four places: the canonical and `og:` tags in `index.html`, `robots.txt` and `sitemap.xml`. The band and show data for search engines follows the canonical link on its own.
 
 ## How it is put together
 
@@ -57,7 +58,7 @@ vercel.json           hosting settings
 assets/css/styles.css design tokens at the top, then one block per section
 assets/js/main.js     behaviour: scroll wash, nav, shows list, gallery viewer, form
 data/site-data.js     the content you edit
-assets/img/           logo, group photo, share image
+assets/img/           logo, group photo, share image, icons
 ```
 
 Design notes:
@@ -65,6 +66,7 @@ Design notes:
 - A fixed backdrop and logo sit behind the whole page. An ivory wash fades in over them as you scroll, and content sits on frosted ivory panels in one centered column.
 - The nav links sit together at the top of the page, then part to show the logo once you scroll past the hero. Under 960px wide they move into a full-screen menu.
 - Shows is a list of upcoming dates, with past dates in a collapsible "Past Performances" block.
-- Players and videos load only when a visitor presses play, so no third-party content loads with the page. There is no analytics or tracking. Fonts (Fraunces, Inter) load from Google Fonts.
+- Players and videos load only when a visitor presses play, so no third-party content loads with the page. There is no analytics or tracking. Fonts (Fraunces, Inter) load from Google Fonts; they could be self-hosted by adding the woff2 files under `assets/fonts/`.
+- Content panels are solid until a hero photo is added, then turn into frosted glass over it.
 - Motion is switched off for visitors who ask their device for reduced motion.
 - Search engines get band and show details as structured data, generated from `data/site-data.js`.

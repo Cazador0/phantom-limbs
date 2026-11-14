@@ -17,6 +17,7 @@
   --text-muted: #3A3140;
   --hairline: #CFC5BB;
   --panel: rgb(245 240 234 / .74);
+  --panel-solid: #F3EDE7;    /* what the frosted panel renders as over the ivory wash */
   --panel-edge: rgb(255 255 255 / .55);
 
   /* type */
@@ -117,8 +118,6 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + var(--s-5)); }
 
 /* Hero actions: Book + the next show */
 .hero__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s-3); max-width: 100%; }
-.btn.btn--light { background: var(--ivory); color: var(--ink); }
-.btn.btn--light:hover { background: var(--lilac); color: var(--ink); }
 
 .next-show {
   display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center;
@@ -287,8 +286,13 @@ main { position: relative; }
   width: calc(100% - var(--s-5)); max-width: 840px;
   margin: var(--s-7) auto 0; padding: var(--s-9) 0;
   border: 1px solid var(--panel-edge); border-radius: var(--r-l);
-  background: var(--panel);
+  background: var(--panel-solid);
   box-shadow: 0 1px 0 rgb(27 21 33 / .06);
+}
+/* With a hero photo behind the page, the panels turn back into frosted glass.
+   Until then a solid colour looks the same and is cheaper to draw while scrolling. */
+.backdrop:has(img) ~ main .panel {
+  background: var(--panel);
   -webkit-backdrop-filter: blur(18px) saturate(1.1); backdrop-filter: blur(18px) saturate(1.1);
 }
 .column {

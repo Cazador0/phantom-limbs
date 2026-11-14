@@ -32,11 +32,13 @@ window.PL = {
 
   /*
    * PHOTOGRAPHY
-   * The gallery appears once there is at least one photo here.
+   * The gallery appears once there are at least two photos here.
    *
    *   src     "assets/img/gallery/live-01.jpg"  required
    *   width / height  pixel size of the file    required (stops the page jumping)
    *   alt     short description of the photo    required
+   *   thumb   "assets/img/gallery/live-01-thumb.webp"  optional, a small version for the grid
+   *           (about 800 px wide) so the page loads less; the viewer uses src
    *   credit  "Photographer name"               optional, shown in the viewer
    */
   photos: [

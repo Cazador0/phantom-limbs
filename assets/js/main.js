@@ -105,6 +105,7 @@
     var navLogo = $('[data-nav-logo]');
     var root = document.documentElement;
     var links = $$('.nav__link');
+    var sections = $$('main > section[id]').filter(function (sec) { return !sec.hidden; });
     var ticking = false;
 
     function update() {
@@ -121,9 +122,9 @@
       if (navLogo) navLogo.tabIndex = past ? 0 : -1;
 
       var current = 'top';
-      $$('main > section[id]').forEach(function (sec) {
-        if (!sec.hidden && sec.getBoundingClientRect().top <= headerH + 88) current = sec.id;
-      });
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].getBoundingClientRect().top <= headerH + 88) current = sections[i].id; else break;
+      }
       links.forEach(function (a) {
         if (a.getAttribute('href') === '#' + current) a.setAttribute('aria-current', 'true');
         else a.removeAttribute('aria-current');
@@ -308,7 +309,7 @@
 
     photos.forEach(function (p, i) {
       var btn = el('button', { class: 'gallery__tile', type: 'button', 'aria-label': 'Open photo ' + (i + 1) + ' of ' + photos.length + (p.alt ? ': ' + p.alt : '') }, [
-        el('img', { src: safeUrl(p.src), alt: '', width: p.width, height: p.height, loading: 'lazy', decoding: 'async' })
+        el('img', { src: safeUrl(p.thumb) || safeUrl(p.src), alt: '', width: p.width, height: p.height, loading: 'lazy', decoding: 'async' })
       ]);
       btn.addEventListener('click', function () {
         index = i; paint();
@@ -414,13 +415,13 @@
      Structured data for search engines (band + upcoming shows)
      ------------------------------------------------------------------ */
   function initStructuredData(upcoming) {
-    var site = 'https://phantomlimbsdallas.com/';
+    var site = document.querySelector('link[rel="canonical"]').href;
     var group = {
       '@context': 'https://schema.org',
       '@type': 'MusicGroup',
       name: 'Phantom Limbs',
       url: site,
-      image: site + 'assets/img/og.png',
+      image: site + 'assets/img/og.jpg',
       email: (PL.contact && PL.contact.email) || undefined,
       foundingLocation: { '@type': 'Place', name: 'Dallas, TX' },
       genre: ['R&B', 'Funk', 'Rock'],
