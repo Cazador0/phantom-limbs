@@ -50,16 +50,14 @@
     var left = $('.nav__group--left');
     var right = $('.nav__group--right');
     if (!left || !right) return;
-    var social = $('.nav__social', right);
-    var book = $('.nav__book', right);
-    var items = $$('li', left).concat($$('li', right)).filter(function (li) { return li !== social && li !== book; });
+    var items = $$('li', left).concat($$('li', right));
     var visible = items.filter(function (li) { return !li.hidden; });
     var half = Math.ceil(visible.length / 2);
     var seen = 0;
     items.forEach(function (li) {
       var side = seen < half ? left : right;
       if (!li.hidden) seen++;
-      if (side === right && social) right.insertBefore(li, social); else side.appendChild(li);
+      side.appendChild(li);
     });
   }
 
