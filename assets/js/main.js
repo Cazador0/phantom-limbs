@@ -68,9 +68,102 @@
     }
     prev.addEventListener('click', function () { step(-1); });
     next.addEventListener('click', function () { step(1); });
+    initMemberDialog(track);
     track.addEventListener('scroll', function () { if (!ticking) { ticking = true; window.requestAnimationFrame(state); } }, { passive: true });
     window.addEventListener('resize', state);
     state();
+  }
+
+  /*
+   * Enlarged member card. The big card grows out of the pressed card and
+   * shrinks back into the matching card on close (a scale + move, so the
+   * text never stretches). Prev/next, arrow keys and swipes step through
+   * the members without closing.
+   */
+  function initMemberDialog(track) {
+    var dialog = $('[data-member-dialog]');
+    if (!dialog || !dialog.showModal) return;
+    var cards = $$('.member__card', track);
+    var big = $('[data-member-card]', dialog);
+    var portrait = $('[data-member-portrait]', dialog);
+    var nameEl = $('[data-member-name]', dialog);
+    var roleEl = $('[data-member-role]', dialog);
+    var count = $('[data-member-count]', dialog);
+    var index = 0, closing = false;
+    var EASE = 'cubic-bezier(.2,.7,.2,1)';
+
+    function paint() {
+      var card = cards[index];
+      var src = $('.member__portrait', card);
+      portrait.textContent = '';
+      portrait.setAttribute('data-initials', src.getAttribute('data-initials') || '');
+      var img = $('img', src);
+      if (img) {
+        var copy = img.cloneNode(true);
+        copy.removeAttribute('loading');
+        copy.alt = $('.member__name', card).textContent;
+        portrait.appendChild(copy);
+      }
+      nameEl.textContent = $('.member__name', card).textContent;
+      roleEl.textContent = $('.member__role', card).textContent;
+      count.textContent = (index + 1) + ' of ' + cards.length;
+    }
+
+    // Transform that puts the big card exactly over `rect`, scaled evenly.
+    function overRect(rect) {
+      var b = big.getBoundingClientRect();
+      var k = rect.width / b.width;
+      var dx = (rect.left + rect.width / 2) - (b.left + b.width / 2);
+      var dy = (rect.top + rect.height / 2) - (b.top + b.height / 2);
+      return 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')';
+    }
+    function visible(el) {
+      var r = el.getBoundingClientRect(), t = track.getBoundingClientRect();
+      return r.right > t.left && r.left < t.right && r.bottom > 0 && r.top < window.innerHeight;
+    }
+
+    function open(i) {
+      index = i;
+      paint();
+      dialog.showModal();
+      if (reduceMotion || !big.animate) return;
+      big.animate([{ transform: overRect(cards[i].getBoundingClientRect()), opacity: .6 }, { transform: 'none', opacity: 1 }],
+        { duration: 340, easing: EASE });
+    }
+    function close() {
+      if (closing || !dialog.open) return;
+      var card = cards[index];
+      card.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+      function done() { closing = false; dialog.close(); card.focus({ preventScroll: true }); }
+      if (reduceMotion || !big.animate || !visible(card)) { done(); return; }
+      closing = true;
+      var anim = big.animate([{ transform: 'none', opacity: 1 }, { transform: overRect(card.getBoundingClientRect()), opacity: .4 }],
+        { duration: 240, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+      anim.onfinish = function () { done(); anim.cancel(); };
+    }
+    function go(step) {
+      index = (index + step + cards.length) % cards.length;
+      paint();
+      if (!reduceMotion && big.animate) big.animate([{ opacity: .4, transform: 'translateX(' + (step * 24) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: EASE });
+    }
+
+    cards.forEach(function (c, i) { c.addEventListener('click', function () { open(i); }); });
+    $('[data-member-close]', dialog).addEventListener('click', close);
+    $('[data-member-prev]', dialog).addEventListener('click', function () { go(-1); });
+    $('[data-member-next]', dialog).addEventListener('click', function () { go(1); });
+    dialog.addEventListener('cancel', function (e) { e.preventDefault(); close(); });          // Escape
+    dialog.addEventListener('click', function (e) { if (e.target === dialog) close(); });       // backdrop
+    dialog.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    });
+    var startX = null;
+    big.addEventListener('touchstart', function (e) { startX = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+    big.addEventListener('touchend', function (e) {
+      if (startX == null) return;
+      var dx = e.changedTouches[0].clientX - startX; startX = null;
+      if (Math.abs(dx) > 48) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 
   /* ------------------------------------------------------------------

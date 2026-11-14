@@ -28,6 +28,8 @@
   --hairline: #CFC5BB;
   --panel: rgb(245 240 234 / .74);
   --panel-solid: #F3EDE7;    /* what the frosted panel renders as over the ivory wash */
+  --surface-raised: #FBF8F4; /* floating cards */
+  --shadow-float: 0 1px 2px rgb(27 21 33 / .06), 0 10px 24px -10px rgb(27 21 33 / .28);
   --panel-edge: rgb(255 255 255 / .55);
 
   /* type */
@@ -356,12 +358,18 @@ main { position: relative; }
 .member {
   flex: 0 0 clamp(180px, 29%, 216px);
   scroll-snap-align: start;
-  display: flex; flex-direction: column; gap: var(--s-2); text-align: center;
-  padding: var(--s-2) var(--s-2) var(--s-4);
-  border-radius: var(--r-m);
-  background: #FBF8F4;
-  box-shadow: 0 1px 2px rgb(27 21 33 / .06), 0 10px 24px -10px rgb(27 21 33 / .28);
+  display: flex;
 }
+.member__card {
+  flex: 1; display: flex; flex-direction: column; gap: var(--s-2); text-align: center;
+  padding: var(--s-2) var(--s-2) var(--s-4); border: 0;
+  border-radius: var(--r-m); background: var(--surface-raised); color: inherit;
+  box-shadow: var(--shadow-float); cursor: zoom-in;
+  transition: box-shadow var(--t-fast) ease;
+}
+.member__card:hover { box-shadow: 0 1px 2px rgb(27 21 33 / .08), 0 16px 32px -12px rgb(27 21 33 / .36); }
+.member__card:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+.member__card .member__portrait { width: 100%; }
 .members__controls { display: flex; justify-content: center; gap: var(--s-3); }
 .members__controls .icon-btn[disabled] { opacity: .35; cursor: default; }
 /* portrait sits inside the card */
@@ -380,6 +388,38 @@ main { position: relative; }
   font: 600 .6875rem/1.3 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
   color: var(--aubergine);
 }
+
+/* The enlarged member card: the same floating card, bigger, over a dimmed page.
+   It grows out of the card that was pressed (main.js) and shrinks back on close. */
+.member-dialog {
+  width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: var(--s-5);
+  background: transparent; color: var(--text); overflow: auto;
+}
+.member-dialog[open] { display: grid; place-items: center; }
+.member-dialog::backdrop {
+  background: rgb(27 21 33 / .55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.member-dialog[open]::backdrop { animation: fade-in var(--t-norm) ease both; }
+.member-dialog__card {
+  position: relative;
+  width: min(440px, 100%, calc((100dvh - 240px) * .8));
+  min-width: min(260px, 100%);
+  display: flex; flex-direction: column; gap: var(--s-3); text-align: center;
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  border-radius: var(--r-l); background: var(--surface-raised);
+  box-shadow: 0 2px 4px rgb(27 21 33 / .08), 0 30px 60px -20px rgb(27 21 33 / .5);
+  transform-origin: center;
+}
+.member-dialog__portrait { border-radius: var(--r-m); }
+.member-dialog__portrait:empty::after { font-size: 3.5rem; }
+.member-dialog__name { margin-top: var(--s-2); font: 500 clamp(1.5rem, 1.2rem + 1.2vw, 2rem)/1.1 var(--font-display); text-wrap: balance; }
+.member-dialog__close {
+  position: absolute; top: var(--s-4); right: var(--s-4); z-index: 1;
+  background: rgb(251 248 244 / .85); border-color: transparent;
+}
+.member-dialog__nav { display: flex; align-items: center; justify-content: center; gap: var(--s-4); margin-top: var(--s-2); }
+.member-dialog__count { min-width: 4.5em; font-size: var(--fs-small); color: var(--text-muted); }
 
 /* ---------- Listen / Watch ---------- */
 .stack { display: flex; flex-direction: column; gap: var(--s-5); }
@@ -557,7 +597,7 @@ main { position: relative; }
 
 /* ---------- Print ---------- */
 @media print {
-  .backdrop, .wash, .site-header, .hero__actions, dialog, .form { display: none !important; }
+  .backdrop, .wash, .site-header, .hero__actions, dialog, .form, .members__controls { display: none !important; }
   .hero { min-height: 0; padding: 0; }
   .hero__logo { position: static; transform: none; width: 60%; margin: 0 auto; }
   .panel { border: 0; background: none; padding: var(--s-5) 0; }
