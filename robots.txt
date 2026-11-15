@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://phantom-limbs.vercel.app/sitemap.xml
+Sitemap: https://www.phantomlimbsband.com/sitemap.xml
