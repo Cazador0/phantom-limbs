@@ -1,6 +1,6 @@
 # Phantom Limbs
 
-The official website for Phantom Limbs, a five-piece band from Dallas (phantomlimbsdallas.com).
+The official website for Phantom Limbs, a five-piece band from Dallas (phantomlimbsband.com).
 
 It is one scrolling page with no build step: plain HTML, CSS and JavaScript. Open `index.html` in a browser, or serve the folder from any static host.
 
@@ -45,9 +45,9 @@ To put it live:
 1. In Vercel, choose **Add New → Project** and import this repository.
 2. Leave the framework preset on **Other**, with no build command and no output directory.
 3. Deploy. Every push to `main` then publishes the site, and every pull request gets its own preview link.
-4. Add `phantomlimbsdallas.com` under the project's **Domains** and point the domain's DNS at Vercel as it instructs.
+4. Add `www.phantomlimbsband.com` (and `phantomlimbsband.com`, redirecting to it) under the project's **Domains** and point the domain's DNS at Vercel as it instructs.
 
-Search and sharing currently point at `https://phantom-limbs.vercel.app/`. Once phantomlimbsdallas.com is connected, replace that address in four places: the canonical and `og:` tags in `index.html`, `robots.txt` and `sitemap.xml`. The band and show data for search engines follows the canonical link on its own.
+Search and sharing point at `https://www.phantomlimbsband.com/`. If the address ever changes, update it in four places: the canonical and `og:` tags in `index.html`, `robots.txt` and `sitemap.xml`. The band and show data for search engines follows the canonical link on its own.
 
 ## How it is put together
 
