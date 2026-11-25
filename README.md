@@ -47,7 +47,7 @@ To put it live:
 3. Deploy. Every push to `main` then publishes the site, and every pull request gets its own preview link.
 4. Add `www.phantomlimbsband.com` (and `phantomlimbsband.com`, redirecting to it) under the project's **Domains** and point the domain's DNS at Vercel as it instructs.
 
-Search and sharing point at `https://www.phantomlimbsband.com/`. If the address ever changes, update it in four places: the canonical and `og:` tags in `index.html`, `robots.txt` and `sitemap.xml`. The band and show data for search engines follows the canonical link on its own.
+Search and sharing point at `https://www.phantomlimbsband.com/`. If the address ever changes, update it in `index.html` (the canonical, `og:`, `twitter:` and `#schema-json` tags), `robots.txt` and `sitemap.xml`. The dynamic show data for search engines follows the canonical link on its own.
 
 ## How it is put together
 
