@@ -30,7 +30,7 @@ The official site for the Dallas band Phantom Limbs, live at https://www.phantom
 
 So an inline `style=""` attribute, a `<style>` block, a hosted font, a new image host, a new script host or a request to another site is blocked in production. When a feature needs one of these, change the policy in the same pull request. `python3 -m http.server` does not send the policy, so only the Vercel preview shows the breakage. Look for policy errors in the browser console there.
 
-**Show entries.** A date must be written `YYYY-MM-DD`. An entry with any other date format, or with no `venue`, is dropped from the page with no warning. Past dates move to "Past Performances" by the visitor's own clock. After editing `shows`, load the page and confirm the row is there.
+**Show entries.** A date must be written `YYYY-MM-DD`. An entry with any other date format, or with no `venue`, is dropped from the page with no warning. Past dates move to "Past Performances" after midnight Central time (`America/Chicago`). After editing `shows`, load the page and confirm the row is there.
 
 **Listen and Watch entries.** `playerUrl()` and `youtubeId()` accept Spotify, Apple Music, SoundCloud, Bandcamp embed links and YouTube links. Any other link is dropped with no warning, and a section with no valid entry stays hidden along with its nav link. A new music or video service needs a new branch in those functions.
 

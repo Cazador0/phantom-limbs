@@ -307,9 +307,20 @@
     return d.getMonth() === +m[2] - 1 ? d : null;
   }
   function fmt(date, opts) { return date.toLocaleDateString('en-US', opts); }
+  function todayCentral() {
+    try {
+      var map = {};
+      new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(new Date()).forEach(function (p) { map[p.type] = p.value; });
+      var d = parseDate(map.year + '-' + map.month + '-' + map.day);
+      if (d) return d;
+    } catch (e) {}
+    var fallback = new Date(); fallback.setHours(0, 0, 0, 0);
+    return fallback;
+  }
 
   function initShows() {
-    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var today = todayCentral();
     var all = (Array.isArray(PL.shows) ? PL.shows : [])
       .map(function (s) { return Object.assign({}, s, { when: parseDate(s && s.date) }); })
       .filter(function (s) { return s.when && s.venue; });
