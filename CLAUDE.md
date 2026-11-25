@@ -8,7 +8,7 @@ The official site for the Dallas band Phantom Limbs, live at https://www.phantom
 
 - One scrolling page of hand-written HTML, CSS and JavaScript. Nothing is compiled or bundled.
 - Vercel serves the repository root as it is, with no build command. Code that needs a bundler, a framework or `node_modules` will not run in production.
-- `package.json` is there only because Vercel's analytics install added it. The page loads analytics from two script tags in the head of `index.html`. Nothing imports the npm package, and no `npm install` is needed.
+- `package.json` holds only `npm test` (`.agents/check.js`). The page loads analytics from two script tags in the head of `index.html`, and no `npm install` is needed.
 - A merge or push to `main` is a production release, and nothing blocks a direct push. Work on a branch.
 
 ## Code conventions
@@ -36,7 +36,7 @@ So an inline `style=""` attribute, a `<style>` block, a hosted font, a new image
 
 **Copy that is written more than once.** Change every copy together:
 
-- Member names and roles: the bio paragraph, each member card (visible text, `aria-label` and `data-initials`) and the `member` list in `initStructuredData()`.
+- Member names and roles: the bio paragraph and each member card (visible text, `aria-label` and `data-initials`; `initStructuredData()` reads the cards directly).
 - The opening sentence of the bio: the page, the `description` meta tag and the `og:description` meta tag.
 - Genres: the bio and the `genre` list in `initStructuredData()`.
 
@@ -54,12 +54,11 @@ A past rename updated the visible name and left one `aria-label` and one set of 
 ## Checking a change
 
 ```sh
-node --check assets/js/main.js
-node --check data/site-data.js
+npm test                      # syntax, site-data entries, and copy sync (.agents/check.js)
 python3 -m http.server 8000   # then open http://localhost:8000
 ```
 
-There are no tests, no linter and no CI. `npm test` only prints a message.
+There is no CI; run `npm test` locally before opening a pull request.
 
 Then look at the page:
 

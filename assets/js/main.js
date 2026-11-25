@@ -590,10 +590,13 @@
       email: (PL.contact && PL.contact.email) || undefined,
       foundingLocation: { '@type': 'Place', name: 'Dallas, TX' },
       genre: ['Rock', 'Funk', 'R&B'],
-      member: [
-        ['Tiffany Baucum', 'Lead vocals'], ['Joren Cain', 'Keyboards / guitar'], ['Danny Enriquez', 'Guitar / vocals'],
-        ['Robert Tracy', 'Bass'], ['Kei Tabuchi', 'Drums']
-      ].map(function (m) { return { '@type': 'OrganizationRole', roleName: m[1], member: { '@type': 'Person', name: m[0] } }; }),
+      member: $$('.band-member').map(function (li) {
+        return {
+          '@type': 'OrganizationRole',
+          roleName: ($('.band-member__role', li) || {}).textContent || '',
+          member: { '@type': 'Person', name: ($('.band-member__name', li) || {}).textContent || '' }
+        };
+      }),
       sameAs: socialLinks().map(function (l) { return l.url; })
     };
     if (!group.sameAs.length) delete group.sameAs;

@@ -4,7 +4,7 @@
   "description": "The official website for Phantom Limbs, a five-piece band from Dallas (phantomlimbsband.com).",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"No tests configured\""
+    "test": "node .agents/check.js"
   },
   "repository": {
     "type": "git",
@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/Cazador0/phantom-limbs/issues"
   },
-  "homepage": "https://github.com/Cazador0/phantom-limbs#readme",
-  "dependencies": {
-    "@vercel/analytics": "^2.0.1"
-  }
+  "homepage": "https://github.com/Cazador0/phantom-limbs#readme"
 }
