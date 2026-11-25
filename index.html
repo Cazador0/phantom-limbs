@@ -181,7 +181,20 @@
   <section class="panel" id="watch" aria-labelledby="h-watch" hidden>
     <div class="column reveal">
       <h2 class="title" id="h-watch">Watch</h2>
-      <ul class="stack" data-watch></ul>
+      <ul class="video-grid" data-watch hidden></ul>
+    </div>
+
+    <h3 class="eyebrow eyebrow--center reels__title" data-reels-title hidden>Reels</h3>
+    <div class="reels-scroller reveal" data-reels hidden>
+      <ul class="reels" id="reels-track" tabindex="-1" aria-label="Reels, scrolls sideways" data-reels-list></ul>
+      <div class="reels__controls" hidden>
+        <button class="icon-btn" type="button" aria-controls="reels-track" aria-label="Previous reel" data-reels-prev>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3L5 8l5 5"/></svg>
+        </button>
+        <button class="icon-btn" type="button" aria-controls="reels-track" aria-label="Next reel" data-reels-next>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
+      </div>
     </div>
   </section>
 

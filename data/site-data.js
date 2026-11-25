@@ -69,14 +69,18 @@ window.PL = {
 
   /*
    * WATCH (Phase 2)
-   * YouTube videos, in the order to show them. The section appears once
-   * there is one entry.
+   * YouTube videos and Shorts, in the order to show them. Standard videos
+   * appear in a 16:9 grid; YouTube Shorts (/shorts/... links) automatically
+   * appear in a vertical Reels row below (or add `reel: true` if a Short uses
+   * a youtu.be link). The section appears once there is one entry.
    *
-   *   url     the YouTube link (youtube.com/watch?v=..., youtu.be/..., or a Shorts link)
-   *   title   "Video title"
+   *   url     the YouTube link (youtube.com/watch?v=..., youtu.be/..., or youtube.com/shorts/...)
+   *   title   "Video title"                     optional
+   *   reel    true | false                      optional (auto-detected from /shorts/ links)
    *
-   * Example:
-   *   { title: "Live at ...", url: "https://youtu.be/..." },
+   * Examples:
+   *   { title: "Live at ...", url: "https://www.youtube.com/watch?v=..." },
+   *   { title: "Soundcheck clip", url: "https://www.youtube.com/shorts/..." },
    */
   watch: [],
 

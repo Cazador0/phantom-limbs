@@ -32,7 +32,7 @@ So an inline `style=""` attribute, a `<style>` block, a hosted font, a new image
 
 **Show entries.** A date must be written `YYYY-MM-DD`. An entry with any other date format, or with no `venue`, is dropped from the page with no warning. Past dates move to "Past Performances" after midnight Central time (`America/Chicago`). After editing `shows`, load the page and confirm the row is there.
 
-**Listen and Watch entries.** `playerUrl()` and `youtubeId()` accept Spotify, Apple Music, SoundCloud, Bandcamp embed links and YouTube links. Any other link is dropped with no warning, and a section with no valid entry stays hidden along with its nav link. A new music or video service needs a new branch in those functions.
+**Listen and Watch entries.** `playerUrl()` and `youtubeId()` accept Spotify, Apple Music, SoundCloud, Bandcamp embed links and YouTube links. In `watch`, `isReel()` places `/shorts/` links (or entries with `reel: true`) into the `9:16` Reels scroller and keeps other YouTube links in the `16:9` video grid. Any unsupported link is dropped with no warning, and a section with no valid entry stays hidden along with its nav link. A new music or video service needs a new branch in those functions.
 
 **Copy that is written more than once.** Change every copy together:
 

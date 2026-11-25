@@ -75,6 +75,7 @@ function validYoutube(v) {
 
 (PL.watch || []).forEach(function (v, i) {
   if (!v || !validYoutube(v)) fail('watch[' + i + ']: invalid YouTube entry ' + JSON.stringify(v));
+  if (v && v.reel !== undefined && typeof v.reel !== 'boolean') fail('watch[' + i + ']: reel must be boolean, got ' + JSON.stringify(v.reel));
 });
 
 (PL.photos || []).forEach(function (p, i) {
