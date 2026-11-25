@@ -288,6 +288,8 @@ dialog::backdrop { background: transparent; }
 .btn:hover { background: var(--ink); color: var(--ivory); }
 .btn:active { transform: translateY(1px); }
 .btn[disabled] { opacity: .6; cursor: progress; }
+.btn--outline { background: transparent; border: 1px solid var(--aubergine); color: var(--aubergine); }
+.btn--outline:hover { background: var(--aubergine); color: var(--ivory); }
 
 .text-btn {
   min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;

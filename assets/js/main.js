@@ -551,6 +551,7 @@
     var email = EMAIL_RE.test(contact.email || '') ? contact.email : 'phantomlimbs62@gmail.com';
     var done = $('[data-form-done]');
     var copyBtn = $('[data-form-copy]');
+    var copyEmailBtn = $('[data-form-copy-email]');
     var copyStatus = $('[data-form-copy-status]');
     var fields = ['name', 'email', 'message'];
     var lastDraft = '';
@@ -590,13 +591,21 @@
       done.focus();
     });
 
-    // For visitors with no email app set up: copy the whole message to paste into webmail.
-    copyBtn.addEventListener('click', function () {
-      function ok() { copyStatus.textContent = 'Copied. Paste it into a new email to ' + email + '.'; }
+    // For visitors with no email app set up: copy the whole message or the address to paste into webmail.
+    function writeClip(text, okMsg) {
+      function ok() { copyStatus.textContent = okMsg; }
       function fail() { copyStatus.textContent = 'Copy didn\'t work here. Please email ' + email + ' directly.'; }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastDraft).then(ok, fail);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fail);
       else fail();
+    }
+    copyBtn.addEventListener('click', function () {
+      writeClip(lastDraft, 'Copied. Paste it into a new email to ' + email + '.');
     });
+    if (copyEmailBtn) {
+      copyEmailBtn.addEventListener('click', function () {
+        writeClip(email, 'Copied ' + email + '.');
+      });
+    }
 
     $('[data-form-reset]').addEventListener('click', function () {
       done.hidden = true;
