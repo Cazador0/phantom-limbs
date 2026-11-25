@@ -131,6 +131,19 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + var(--s-5)); }
 /* Hero actions: Book + the next show */
 .hero__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s-3); max-width: 100%; }
 
+.hero-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  min-height: 48px; padding: 0 var(--s-5);
+  border: 1px solid rgb(255 255 255 / .28); border-radius: var(--r-full);
+  background: rgb(84 42 105 / .72);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: var(--ivory); text-decoration: none; white-space: nowrap;
+  font: 600 .9375rem/1 var(--font-body);
+  transition: background var(--t-fast) ease, transform var(--t-fast) var(--ease-out);
+}
+.hero-cta:hover { color: var(--ivory); background: var(--aubergine); transform: translateY(-1px); }
+.hero-cta:active { transform: translateY(0); }
+
 .next-show {
   display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: var(--s-1) var(--s-3);
@@ -299,7 +312,7 @@ main { position: relative; }
   margin: var(--s-7) auto 0; padding: var(--s-9) 0;
   border: 1px solid var(--panel-edge); border-radius: var(--r-l);
   background: var(--panel-solid);
-  box-shadow: 0 1px 0 rgb(27 21 33 / .06);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .7), 0 1px 2px rgb(27 21 33 / .05), 0 14px 34px -18px rgb(27 21 33 / .18);
 }
 /* With a hero photo behind the page, the panels turn back into frosted glass.
    Until then a solid colour looks the same and is cheaper to draw while scrolling. */
@@ -365,9 +378,9 @@ main { position: relative; }
   padding: var(--s-2) var(--s-2) var(--s-4); border: 0;
   border-radius: var(--r-m); background: var(--surface-raised); color: inherit;
   box-shadow: var(--shadow-float); cursor: zoom-in;
-  transition: box-shadow var(--t-fast) ease;
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) ease;
 }
-.band-member__card:hover { box-shadow: 0 1px 2px rgb(27 21 33 / .08), 0 16px 32px -12px rgb(27 21 33 / .36); }
+.band-member__card:hover { transform: translateY(-2px); box-shadow: 0 1px 2px rgb(27 21 33 / .08), 0 16px 32px -12px rgb(27 21 33 / .36); }
 .band-member__card:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
 .band-member__card .band-member__portrait { width: 100%; }
 .band__controls { display: flex; justify-content: center; gap: var(--s-3); }
