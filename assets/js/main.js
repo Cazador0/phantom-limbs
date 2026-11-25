@@ -589,7 +589,7 @@
       image: site + 'assets/img/og.jpg',
       email: (PL.contact && PL.contact.email) || undefined,
       foundingLocation: { '@type': 'Place', name: 'Dallas, TX' },
-      genre: ['R&B', 'Funk', 'Rock'],
+      genre: ['Rock', 'Funk', 'R&B'],
       member: [
         ['Tiffany Baucum', 'Lead vocals'], ['Joren Cain', 'Keyboards / guitar'], ['Danny Enriquez', 'Guitar / vocals'],
         ['Robert Tracy', 'Bass'], ['Kei Tabuchi', 'Drums']
