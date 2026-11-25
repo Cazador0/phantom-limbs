@@ -141,10 +141,16 @@
 
     <h3 class="eyebrow eyebrow--center band__title">The Band</h3>
     <!--
-      PORTRAITS (pending): to add one, put a 4:5 image inside the member's
-      .band-member__portrait, e.g.
-        <img src="assets/img/members/member.jpg" alt="" width="800" height="1000" loading="lazy">
-      The initials tile disappears once an image is there.
+      PORTRAITS (pending): put 4:5 files under assets/img/members/ and add a
+      <picture> (or plain <img>) inside the member's .band-member__portrait:
+
+        <picture>
+          <source type="image/webp" srcset="assets/img/members/<slug>-400.webp 400w, assets/img/members/<slug>-880.webp 880w" sizes="(max-width: 600px) 68vw, (max-width: 819px) 216px, 150px">
+          <img src="assets/img/members/<slug>-880.jpg" alt="" width="880" height="1100" loading="lazy" decoding="async">
+        </picture>
+
+      The initials tile disappears and the enlarged card dialog activates once
+      an image is there; `npm test` checks the file paths and dimensions.
     -->
     <div class="band-scroller reveal" data-band>
     <ul class="band" id="band-track" tabindex="0" aria-label="Band members, scrolls sideways">
