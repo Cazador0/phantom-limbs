@@ -23,7 +23,7 @@ The official site for the Dallas band Phantom Limbs, live at https://www.phantom
 **The content security policy.** `vercel.json` sends a policy with every response. It allows:
 
 - styles and fonts from this site only
-- scripts from this site, inline scripts, and Vercel's analytics host
+- scripts from this site and Vercel's analytics host
 - images from this site, `data:` addresses and YouTube thumbnails
 - network requests to this site and Vercel's analytics hosts
 - frames from any `https` address
