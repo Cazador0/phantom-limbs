@@ -113,14 +113,18 @@
       var src = $('.band-member__portrait', card);
       portrait.textContent = '';
       portrait.setAttribute('data-initials', src.getAttribute('data-initials') || '');
+      var name = $('.band-member__name', card).textContent;
       var img = $('img', src);
       if (img) {
-        var copy = img.cloneNode(true);
-        copy.removeAttribute('loading');
-        copy.alt = $('.band-member__name', card).textContent;
+        var copy = ($('picture', src) || img).cloneNode(true);
+        var copyImg = copy.tagName === 'IMG' ? copy : $('img', copy);
+        copyImg.removeAttribute('loading');
+        copyImg.alt = name;
+        $$('source[srcset]', copy).forEach(function (s) { s.setAttribute('sizes', '(max-width: 520px) 90vw, 440px'); });
+        if (copyImg.hasAttribute('srcset') || copyImg.hasAttribute('sizes')) copyImg.setAttribute('sizes', '(max-width: 520px) 90vw, 440px');
         portrait.appendChild(copy);
       }
-      nameEl.textContent = $('.band-member__name', card).textContent;
+      nameEl.textContent = name;
       roleEl.textContent = $('.band-member__role', card).textContent;
       count.textContent = (index + 1) + ' of ' + cards.length;
     }

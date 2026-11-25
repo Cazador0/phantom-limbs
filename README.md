@@ -23,7 +23,13 @@ The bio, member names and roles are approved copy and live in `index.html`.
 ## What still needs supplying
 
 - **Hero photo.** Until it exists the backdrop is an aubergine gradient. `index.html` has a comment showing where the photo goes.
-- **Member portraits** (4:5). Initials tiles stand in for now; see the comment above the members list in `index.html`.
+- **Member portraits** (4:5). Initials tiles stand in for now; put `.webp` + `.jpg` files under `assets/img/members/` and add a `<picture>` (or plain `<img>`) inside `.band-member__portrait` in `index.html`, then run `npm test` to verify file paths and dimensions:
+  ```html
+  <picture>
+    <source type="image/webp" srcset="assets/img/members/<slug>-400.webp 400w, assets/img/members/<slug>-880.webp 880w" sizes="(max-width: 600px) 68vw, (max-width: 819px) 216px, 150px">
+    <img src="assets/img/members/<slug>-880.jpg" alt="" width="880" height="1100" loading="lazy" decoding="async">
+  </picture>
+  ```
 - **Gallery photos**, with photographer credits and usage rights.
 - **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
 - **An SVG master of the logo.**

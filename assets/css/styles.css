@@ -394,11 +394,12 @@ main { position: relative; }
   position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s);
   background: linear-gradient(160deg, var(--aubergine), var(--ink));
 }
-.band-member__portrait:empty::after {
+.band-member__portrait:not(:has(img))::after {
   content: attr(data-initials);
   position: absolute; inset: 0; display: grid; place-items: center;
   color: rgb(245 240 234 / .5); font: 400 1.75rem/1 var(--font-display); letter-spacing: .06em;
 }
+.band-member__portrait picture { width: 100%; height: 100%; }
 .band-member__portrait img { width: 100%; height: 100%; object-fit: cover; }
 .band-member__name { margin-top: 2px; font: 500 1.125rem/1.15 var(--font-display); text-wrap: balance; }
 .band-member__role {
@@ -438,7 +439,7 @@ main { position: relative; }
   transform-origin: center;
 }
 .band-member-dialog__portrait { border-radius: var(--r-m); }
-.band-member-dialog__portrait:empty::after { font-size: 3.5rem; }
+.band-member-dialog__portrait:not(:has(img))::after { font-size: 3.5rem; }
 .band-member-dialog__name { margin-top: var(--s-2); font: 500 clamp(1.5rem, 1.2rem + 1.2vw, 2rem)/1.1 var(--font-display); text-wrap: balance; }
 .band-member-dialog__close {
   position: absolute; top: var(--s-4); right: var(--s-4); z-index: 1;

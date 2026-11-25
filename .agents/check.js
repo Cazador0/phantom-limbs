@@ -101,6 +101,21 @@ if (!descMeta || descMeta !== ogDescMeta || decodeEntities(descMeta) !== decodeE
   fail('Bio opening sentence out of sync between <meta name="description">, <meta property="og:description">, and <p class="lede">.');
 }
 
+function getAttr(tag, attrName) {
+  var m = new RegExp('(?:^|\\s)' + attrName + '\\s*=\\s*(?:"([^"]*)"|\'([^\']*)\'|([^\\s>]+))', 'i').exec(tag);
+  return m ? (m[1] !== undefined ? m[1] : m[2] !== undefined ? m[2] : m[3]) : null;
+}
+
+function checkLocalAsset(who, rawUrl) {
+  var u = String(rawUrl || '').trim();
+  if (!u) { fail(who + ': empty image URL'); return; }
+  if (/^(?:https?:|data:)/i.test(u)) return;
+  var full = path.resolve(root, u.replace(/^\//, ''));
+  if (full.indexOf(root + path.sep) !== 0 || !fs.existsSync(full) || !fs.statSync(full).isFile()) {
+    fail(who + ': file not found: ' + u);
+  }
+}
+
 var cardRe = /<li\s+class="band-member">([\s\S]*?)<\/li>/g;
 var match, count = 0;
 while ((match = cardRe.exec(html)) !== null) {
@@ -113,6 +128,33 @@ while ((match = cardRe.exec(html)) !== null) {
   if (!name) fail('band-member[' + count + ']: missing .band-member__name');
   if (label && label !== 'Enlarge ' + name) fail('band-member (' + name + '): aria-label ' + JSON.stringify(label) + ' != ' + JSON.stringify('Enlarge ' + name));
   if (initials && initials !== expectedInitials) fail('band-member (' + name + '): data-initials ' + JSON.stringify(initials) + ' != ' + JSON.stringify(expectedInitials));
+
+  var who = 'band-member (' + (name || count) + ')';
+  var cleanBlock = block.replace(/<!--[\s\S]*?-->/g, '');
+  var tagRe = /<(img|source)\b[^>]*>/gi, tagMatch;
+  while ((tagMatch = tagRe.exec(cleanBlock)) !== null) {
+    var tag = tagMatch[0];
+    var isImg = /^<img\b/i.test(tag);
+    var src = getAttr(tag, 'src');
+    var srcset = getAttr(tag, 'srcset');
+    if (isImg) {
+      if (!src || !src.trim()) fail(who + ': <img> missing src');
+      else checkLocalAsset(who, src);
+      var w = getAttr(tag, 'width'), h = getAttr(tag, 'height');
+      if (!/^[1-9]\d*$/.test(String(w || '').trim()) || !/^[1-9]\d*$/.test(String(h || '').trim())) {
+        fail(who + ': <img> requires positive numeric width and height');
+      }
+    } else {
+      if (srcset === null) fail(who + ': <source> missing srcset');
+      if (src !== null) checkLocalAsset(who, src);
+    }
+    if (srcset !== null) {
+      if (!srcset.trim()) fail(who + ': empty srcset');
+      else srcset.split(',').forEach(function (part) {
+        checkLocalAsset(who, part.trim().split(/\s+/)[0]);
+      });
+    }
+  }
 }
 if (!count) fail('No .band-member items found in index.html');
 
