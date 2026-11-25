@@ -38,7 +38,7 @@ python3 -m http.server 8000
 
 ## Hosting
 
-The site is set up for **Vercel**. `vercel.json` needs no build: it serves the folder as it is, adds security headers (including a content security policy that only allows this site's own files, YouTube thumbnails and, once added, embedded players), and lets browsers keep images and fonts.
+The site is set up for **Vercel**. `vercel.json` needs no build: it serves the folder as it is, adds security headers (including a content security policy that only allows this site's own files, Vercel's analytics, YouTube thumbnails and, once added, embedded players), and lets browsers keep images and fonts.
 
 To put it live:
 
@@ -65,7 +65,7 @@ Design notes:
 - A fixed backdrop and logo sit behind the whole page. An ivory wash fades in over them as you scroll, and content sits on frosted ivory panels in one centered column.
 - The nav links sit together at the top of the page, then part to show the logo once you scroll past the hero. Under 960px wide they move into a full-screen menu.
 - Shows is a list of upcoming dates, with past dates in a collapsible "Past Performances" block.
-- Players and videos load only when a visitor presses play, so no third-party content loads with the page. There is no analytics or tracking. Fonts (Fraunces, Inter) are served from the site itself (`assets/fonts/`, Latin characters only, OFL licence alongside), so the page makes no requests to other sites.
+- Players and videos load only when a visitor presses play, so no third-party content loads with the page. Vercel Web Analytics and Speed Insights are switched on (the two script tags in the head of `index.html`); nothing else tracks visitors. Fonts (Fraunces, Inter) are served from the site itself (`assets/fonts/`, Latin characters only, OFL licence alongside), so they need no request to another site.
 - Content panels are solid until a hero photo is added, then turn into frosted glass over it.
 - Motion is switched off for visitors who ask their device for reduced motion.
 - Search engines get band and show details as structured data, generated from `data/site-data.js`.
