@@ -43,39 +43,47 @@
   }
 
   /* ------------------------------------------------------------------
-     The Band: arrow buttons and edge fades for the scrolling card row
+     Horizontal scrollers: arrow buttons and edge fades (#band, #watch reels)
      ------------------------------------------------------------------ */
-  function initBand() {
-    var wrap = $('[data-band]');
-    if (!wrap) return;
-    var track = $('.band', wrap);
-    var controls = $('.band__controls', wrap);
-    var prev = $('[data-band-prev]', wrap);
-    var next = $('[data-band-next]', wrap);
+  function bindScroller(wrap, track, itemSel, controls, prev, next) {
+    if (!wrap || !track) return;
     var ticking = false;
     function state() {
       ticking = false;
       var max = track.scrollWidth - track.clientWidth - 2;
       var canScroll = max > 0;
       var atStart = track.scrollLeft <= 2, atEnd = track.scrollLeft >= max;
+      wrap.classList.toggle('is-scrollable', canScroll);
       wrap.classList.toggle('at-start', atStart);
       wrap.classList.toggle('at-end', atEnd);
       show(controls, canScroll);
       track.tabIndex = canScroll ? 0 : -1;
-      prev.disabled = atStart;
-      next.disabled = atEnd;
+      var toPrev = atEnd && document.activeElement === next && prev && !atStart;
+      var toNext = atStart && document.activeElement === prev && next && !atEnd;
+      if (prev) prev.disabled = atStart;
+      if (next) next.disabled = atEnd;
+      if (toPrev) prev.focus();
+      else if (toNext) next.focus();
     }
     function step(dir) {
-      var card = $('.band-member', track);
+      var card = $(itemSel, track);
+      if (!card) return;
       var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
       track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: reduceMotion ? 'auto' : 'smooth' });
     }
-    prev.addEventListener('click', function () { step(-1); });
-    next.addEventListener('click', function () { step(1); });
-    initBandMemberDialog(track);
+    if (prev) prev.addEventListener('click', function () { step(-1); });
+    if (next) next.addEventListener('click', function () { step(1); });
     track.addEventListener('scroll', function () { if (!ticking) { ticking = true; window.requestAnimationFrame(state); } }, { passive: true });
     window.addEventListener('resize', state);
     state();
+  }
+
+  function initBand() {
+    var wrap = $('[data-band]');
+    if (!wrap) return;
+    var track = $('.band', wrap);
+    initBandMemberDialog(track);
+    bindScroller(wrap, track, '.band-member', $('.band__controls', wrap), $('[data-band-prev]', wrap), $('[data-band-next]', wrap));
   }
 
   /*
@@ -429,6 +437,14 @@
     return /^[\w-]{6,20}$/.test(id) ? id : '';
   }
 
+  function isReel(v) {
+    if (typeof v.reel === 'boolean') return v.reel;
+    var u;
+    try { u = new URL(String(v.url || '').trim()); } catch (e) { return false; }
+    var host = u.hostname.replace(/^(www|m)\./, '');
+    return (host === 'youtube.com' || host === 'youtube-nocookie.com') && /^\/shorts\//.test(u.pathname);
+  }
+
   function initListen() {
     var tracks = (Array.isArray(PL.listen) ? PL.listen : [])
       .map(function (t) { return t && Object.assign({}, t, { player: playerUrl(t.url || t.embed) }); })
@@ -447,19 +463,41 @@
   }
 
   function initWatch() {
-    var vids = (Array.isArray(PL.watch) ? PL.watch : [])
-      .map(function (v) { return v && Object.assign({}, v, { id: youtubeId(v) }); })
+    var items = (Array.isArray(PL.watch) ? PL.watch : [])
+      .map(function (v) { return v && Object.assign({}, v, { id: youtubeId(v), reel: isReel(v) }); })
       .filter(function (v) { return v && v.id; });
-    var host = $('[data-watch]');
-    vids.forEach(function (v) {
-      host.appendChild(el('li', {}, [
-        loader('video', 'Play video' + (v.title ? ': ' + v.title : ''), 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg', function () {
-          return el('iframe', { src: 'https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0', title: v.title || 'Video', allow: 'autoplay; encrypted-media; picture-in-picture', allowfullscreen: true, tabindex: '0' });
-        }),
+    var videos = items.filter(function (v) { return !v.reel; });
+    var reels = items.filter(function (v) { return v.reel; });
+    var videoHost = $('[data-watch]');
+    var reelsWrap = $('[data-reels]');
+    var reelsHost = $('[data-reels-list]');
+
+    function ytEmbed(v, kind, noun, fallbackTitle) {
+      return loader(kind, 'Play ' + noun + (v.title ? ': ' + v.title : ''), 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg', function () {
+        return el('iframe', { src: 'https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0', title: v.title || fallbackTitle, allow: 'autoplay; encrypted-media; picture-in-picture', allowfullscreen: true, tabindex: '0' });
+      });
+    }
+
+    videos.forEach(function (v) {
+      videoHost.appendChild(el('li', {}, [
+        ytEmbed(v, 'video', 'video', 'Video'),
         v.title ? el('p', { class: 'video__title', text: v.title }) : null
       ]));
     });
-    setSection('watch', vids.length > 0);
+    reels.forEach(function (v) {
+      reelsHost.appendChild(el('li', { class: 'reel' }, [
+        ytEmbed(v, 'reel', 'reel', 'Reel'),
+        v.title ? el('p', { class: 'reel__title', text: v.title }) : null
+      ]));
+    });
+
+    setSection('watch', items.length > 0);
+    show(videoHost, videos.length > 0);
+    show($('[data-reels-title]'), videos.length > 0 && reels.length > 0);
+    show(reelsWrap, reels.length > 0);
+    if (reels.length) {
+      bindScroller(reelsWrap, reelsHost, '.reel', $('.reels__controls', reelsWrap), $('[data-reels-prev]', reelsWrap), $('[data-reels-next]', reelsWrap));
+    }
   }
 
   /* ------------------------------------------------------------------
