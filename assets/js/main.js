@@ -597,10 +597,11 @@
       sameAs: socialLinks().map(function (l) { return l.url; })
     };
     if (!group.sameAs.length) delete group.sameAs;
+    delete group['@context'];
+    group.foundingLocation.address = { '@type': 'PostalAddress', addressLocality: 'Dallas', addressRegion: 'TX', addressCountry: 'US' };
     var events = upcoming.map(function (s) {
       var pad = function (n) { return (n < 10 ? '0' : '') + n; };
       var ev = {
-        '@context': 'https://schema.org',
         '@type': 'MusicEvent',
         name: 'Phantom Limbs at ' + s.venue,
         startDate: s.when.getFullYear() + '-' + pad(s.when.getMonth() + 1) + '-' + pad(s.when.getDate()),
@@ -613,9 +614,9 @@
       if (url) ev.offers = { '@type': 'Offer', url: url, availability: 'https://schema.org/' + (s.status === 'sold-out' ? 'SoldOut' : 'InStock') };
       return ev;
     });
-    var script = el('script', { type: 'application/ld+json' });
-    script.textContent = JSON.stringify([group].concat(events));
-    document.head.appendChild(script);
+    var script = document.getElementById('schema-json') || el('script', { type: 'application/ld+json', id: 'schema-json' });
+    script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': [group].concat(events) });
+    if (!script.parentNode) document.head.appendChild(script);
   }
 
   /* ------------------------------------------------------------------ */
