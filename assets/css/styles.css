@@ -26,6 +26,7 @@
   --text: var(--ink);
   --text-muted: #3A3140;
   --hairline: #CFC5BB;
+  --control-border: #8B7F76;
   --panel: rgb(245 240 234 / .74);
   --panel-solid: #F3EDE7;    /* what the frosted panel renders as over the ivory wash */
   --surface-raised: #FBF8F4; /* floating cards */
@@ -82,6 +83,7 @@ section[id], div[id] { scroll-margin-top: calc(var(--header-h) + var(--s-5)); }
 :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 2px; }
 .site-header:not(.is-past) :focus-visible,
 .hero :focus-visible, dialog :focus-visible { outline-color: var(--lilac); }
+main:focus { outline: none; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
@@ -284,7 +286,7 @@ dialog::backdrop { background: transparent; }
 .icon-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; padding: 0; flex: none;
-  border: 1px solid var(--hairline); border-radius: var(--r-full);
+  border: 1px solid var(--control-border); border-radius: var(--r-full);
   background: transparent; color: var(--ink); cursor: pointer;
   transition: background var(--t-fast) ease;
 }
@@ -521,7 +523,7 @@ main { position: relative; }
 .field__req { font-weight: 400; color: var(--text-muted); }
 .field input[type="text"], .field input[type="email"], .field textarea {
   width: 100%; min-height: 48px; padding: var(--s-3) var(--s-4);
-  border: 1px solid rgb(84 42 105 / .45); border-radius: 8px;
+  border: 1px solid rgb(84 42 105 / .62); border-radius: 8px;
   background: rgb(255 255 255 / .55); color: var(--ink);
   font-size: 1rem; line-height: 1.4;
 }
@@ -535,7 +537,7 @@ main { position: relative; }
 .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .chip span {
   display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px;
-  border: 1px solid rgb(84 42 105 / .45); border-radius: var(--r-full);
+  border: 1px solid rgb(84 42 105 / .62); border-radius: var(--r-full);
   font: 500 var(--fs-small)/1 var(--font-body);
   transition: background var(--t-fast) ease, color var(--t-fast) ease;
 }
