@@ -42,7 +42,7 @@ window.PL = {
    *   credit  "Photographer name"               optional, shown in the viewer
    */
   photos: [
-    { src: "assets/img/group-band-750.jpg", thumb: "assets/img/group-band-560.webp", width: 750, height: 1024, alt: "Phantom Limbs, all five members standing outdoors with their instruments in front of a mural", credit: "" }
+    { src: "assets/img/group-mural-hd-1600.jpg", thumb: "assets/img/group-mural-hd-960.webp", width: 1600, height: 1504, alt: "Phantom Limbs, all five members standing outdoors with their instruments in front of a mural", credit: "" }
   ],
 
   /*

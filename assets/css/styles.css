@@ -348,7 +348,7 @@ main { position: relative; }
 .lede { font: 400 var(--fs-lede)/1.4 var(--font-display); }
 
 /* ---------- Band ---------- */
-.group-photo { max-width: 624px; margin: var(--s-8) auto 0; padding: 0 var(--s-6); }
+.group-photo { max-width: var(--column); margin: var(--s-8) auto 0; padding: 0 var(--s-6); }
 .group-photo img { width: 100%; border-radius: var(--r-s); }
 
 .band__title { margin-top: 72px; }
