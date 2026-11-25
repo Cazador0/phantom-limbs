@@ -49,15 +49,19 @@
     var wrap = $('[data-band]');
     if (!wrap) return;
     var track = $('.band', wrap);
+    var controls = $('.band__controls', wrap);
     var prev = $('[data-band-prev]', wrap);
     var next = $('[data-band-next]', wrap);
     var ticking = false;
     function state() {
       ticking = false;
       var max = track.scrollWidth - track.clientWidth - 2;
+      var canScroll = max > 0;
       var atStart = track.scrollLeft <= 2, atEnd = track.scrollLeft >= max;
       wrap.classList.toggle('at-start', atStart);
       wrap.classList.toggle('at-end', atEnd);
+      show(controls, canScroll);
+      track.tabIndex = canScroll ? 0 : -1;
       prev.disabled = atStart;
       next.disabled = atEnd;
     }
@@ -75,22 +79,34 @@
   }
 
   /*
-   * Enlarged member card. The big card grows out of the pressed card and
-   * shrinks back into the matching card on close (a scale + move, so the
-   * text never stretches). Prev/next, arrow keys and swipes step through
-   * the members without closing.
+   * Enlarged member card. Only cards with a portrait <img> open the dialog;
+   * initials-only placeholders become static cards until a portrait is added.
+   * Prev/next, arrow keys and swipes step through members without closing.
    */
   function initBandMemberDialog(track) {
+    var rawCards = $$('.band-member__card', track);
+    var cards = [];
+    rawCards.forEach(function (c) {
+      var hasImg = !!$('img', $('.band-member__portrait', c));
+      if (hasImg) {
+        cards.push(c);
+      } else {
+        var box = el('div', { class: 'band-member__card band-member__card--static' });
+        while (c.firstChild) box.appendChild(c.firstChild);
+        c.parentNode.replaceChild(box, c);
+      }
+    });
     var dialog = $('[data-band-member-dialog]');
-    if (!dialog || !dialog.showModal) return;
-    var cards = $$('.band-member__card', track);
+    if (!cards.length || !dialog || !dialog.showModal) return;
     var big = $('[data-band-member-card]', dialog);
     var portrait = $('[data-band-member-portrait]', dialog);
     var nameEl = $('[data-band-member-name]', dialog);
     var roleEl = $('[data-band-member-role]', dialog);
+    var navWrap = $('.band-member-dialog__nav', dialog);
     var count = $('[data-band-member-count]', dialog);
     var index = 0, closing = false;
     var EASE = 'cubic-bezier(.2,.7,.2,1)';
+    show(navWrap, cards.length > 1);
 
     function paint() {
       var card = cards[index];
@@ -142,6 +158,7 @@
       anim.onfinish = function () { done(); anim.cancel(); };
     }
     function go(step) {
+      if (cards.length < 2) return;
       index = (index + step + cards.length) % cards.length;
       paint();
       if (!reduceMotion && big.animate) big.animate([{ opacity: .4, transform: 'translateX(' + (step * 24) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: EASE });
@@ -156,6 +173,7 @@
     dialog.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      else if (e.key === 'Escape') { e.preventDefault(); close(); }
     });
     var startX = null;
     big.addEventListener('touchstart', function (e) { startX = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
