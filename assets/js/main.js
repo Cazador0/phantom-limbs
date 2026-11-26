@@ -108,33 +108,102 @@
     if (!cards.length || !dialog || !dialog.showModal) return;
     var big = $('[data-band-member-card]', dialog);
     var portrait = $('[data-band-member-portrait]', dialog);
+    var photosWrap = $('[data-band-member-photos]', dialog);
     var nameEl = $('[data-band-member-name]', dialog);
     var roleEl = $('[data-band-member-role]', dialog);
     var navWrap = $('.band-member-dialog__nav', dialog);
     var count = $('[data-band-member-count]', dialog);
-    var index = 0, closing = false;
+    var index = 0, photoIndex = 0, closing = false;
     var EASE = 'cubic-bezier(.2,.7,.2,1)';
     show(navWrap, cards.length > 1);
+
+    function memberSlugs(src) {
+      return String(src.getAttribute('data-photos') || '')
+        .split(',')
+        .map(function (s) { return s.trim(); })
+        .filter(function (s) { return /^[a-z0-9-]+$/.test(s); });
+    }
+
+    function makePortrait(slug, altText) {
+      var base = safeUrl('assets/img/members/' + slug);
+      return el('picture', {}, [
+        el('source', { type: 'image/webp', srcset: base + '-400.webp 400w, ' + base + '-880.webp 880w', sizes: '(max-width: 520px) 90vw, 440px' }),
+        el('img', { src: base + '-880.jpg', alt: altText, width: '880', height: '1100', decoding: 'async' })
+      ]);
+    }
+
+    function paintPhoto(src, slugs, name, animateSwap) {
+      portrait.textContent = '';
+      if (slugs.length) {
+        var alt = slugs.length > 1 ? name + ', photo ' + (photoIndex + 1) + ' of ' + slugs.length : name;
+        portrait.appendChild(makePortrait(slugs[photoIndex], alt));
+      } else {
+        var img = $('img', src);
+        if (img) {
+          var copy = ($('picture', src) || img).cloneNode(true);
+          var copyImg = copy.tagName === 'IMG' ? copy : $('img', copy);
+          copyImg.removeAttribute('loading');
+          copyImg.alt = name;
+          $$('source[srcset]', copy).forEach(function (s) { s.setAttribute('sizes', '(max-width: 520px) 90vw, 440px'); });
+          if (copyImg.hasAttribute('srcset') || copyImg.hasAttribute('sizes')) copyImg.setAttribute('sizes', '(max-width: 520px) 90vw, 440px');
+          portrait.appendChild(copy);
+        }
+      }
+      if (photosWrap) {
+        $$('.band-member-dialog__thumb', photosWrap).forEach(function (btn, bi) {
+          if (bi === photoIndex) btn.setAttribute('aria-current', 'true');
+          else btn.removeAttribute('aria-current');
+        });
+      }
+      if (animateSwap && !reduceMotion && portrait.animate) {
+        portrait.animate([{ opacity: .55 }, { opacity: 1 }], { duration: 180, easing: EASE });
+      }
+    }
 
     function paint() {
       var card = cards[index];
       var src = $('.band-member__portrait', card);
-      portrait.textContent = '';
-      portrait.setAttribute('data-initials', src.getAttribute('data-initials') || '');
+      var slugs = memberSlugs(src);
       var name = $('.band-member__name', card).textContent;
-      var img = $('img', src);
-      if (img) {
-        var copy = ($('picture', src) || img).cloneNode(true);
-        var copyImg = copy.tagName === 'IMG' ? copy : $('img', copy);
-        copyImg.removeAttribute('loading');
-        copyImg.alt = name;
-        $$('source[srcset]', copy).forEach(function (s) { s.setAttribute('sizes', '(max-width: 520px) 90vw, 440px'); });
-        if (copyImg.hasAttribute('srcset') || copyImg.hasAttribute('sizes')) copyImg.setAttribute('sizes', '(max-width: 520px) 90vw, 440px');
-        portrait.appendChild(copy);
+      portrait.setAttribute('data-initials', src.getAttribute('data-initials') || '');
+      var hadThumbFocus = photosWrap && photosWrap.contains(document.activeElement);
+      if (photosWrap) {
+        photosWrap.textContent = '';
+        if (slugs.length > 1) {
+          slugs.forEach(function (slug, si) {
+            var btn = el('button', {
+              class: 'band-member-dialog__thumb',
+              type: 'button',
+              'aria-label': 'Photo ' + (si + 1) + ' of ' + slugs.length
+            }, [
+              el('img', { src: safeUrl('assets/img/members/' + slug + '-400.webp'), alt: '', width: '400', height: '500', decoding: 'async' })
+            ]);
+            btn.addEventListener('click', function () {
+              if (photoIndex === si) return;
+              photoIndex = si;
+              paintPhoto(src, slugs, name, true);
+            });
+            photosWrap.appendChild(btn);
+          });
+        }
+        show(photosWrap, slugs.length > 1);
       }
+      paintPhoto(src, slugs, name, false);
       nameEl.textContent = name;
       roleEl.textContent = $('.band-member__role', card).textContent;
       count.textContent = (index + 1) + ' of ' + cards.length;
+      if (hadThumbFocus) {
+        var nextFocus = (slugs.length > 1 && $('.band-member-dialog__thumb', photosWrap)) || $('[data-band-member-next]', dialog) || $('[data-band-member-close]', dialog);
+        if (nextFocus) nextFocus.focus();
+      }
+    }
+
+    function stepPhoto(step) {
+      var src = $('.band-member__portrait', cards[index]);
+      var slugs = memberSlugs(src);
+      if (slugs.length < 2) return;
+      photoIndex = (photoIndex + step + slugs.length) % slugs.length;
+      paintPhoto(src, slugs, $('.band-member__name', cards[index]).textContent, true);
     }
 
     // Transform that puts the big card exactly over `rect`, scaled evenly.
@@ -152,6 +221,7 @@
 
     function open(i) {
       index = i;
+      photoIndex = 0;
       paint();
       dialog.showModal();
       if (reduceMotion || !big.animate) return;
@@ -172,6 +242,7 @@
     function go(step) {
       if (cards.length < 2) return;
       index = (index + step + cards.length) % cards.length;
+      photoIndex = 0;
       paint();
       if (!reduceMotion && big.animate) big.animate([{ opacity: .4, transform: 'translateX(' + (step * 24) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: EASE });
     }
@@ -185,6 +256,8 @@
     dialog.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); stepPhoto(-1); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); stepPhoto(1); }
       else if (e.key === 'Escape') { e.preventDefault(); close(); }
     });
     var startX = null;

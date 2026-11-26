@@ -1,8 +1,8 @@
 # Specification — Member Profile Portraits & Multi-Photo Modal (`001-member-profiles`)
 
-- **Status:** `Draft — Ready for Human Review`
+- **Status:** `Implemented`
 - **Architecture:** Option 1 — Cohesive Mural Row + Multi-Photo Member Modal + Unlocked `#photography`
-- **Branch:** `claude/member-profiles-spec`
+- **Branch:** `claude/member-profiles`
 - **Target Site:** `https://www.phantomlimbsband.com/` (zero-build static HTML/CSS/JS on Vercel)
 
 ---
@@ -14,7 +14,7 @@ Implementation of this specification is complete when all of the following hold:
 1. **Cohesive `#band` Portrait Row:** All five member cards in `index.html` render crisp `4:5` Series A (Mural + Instrument) `<picture>` portraits (`400w` + `880w` WebP with `880w` JPEG fallback) in place of the initials tiles, with **no** multi-photo badges or extra chrome on the card surface.
 2. **Multi-Photo Enlarged Member Modal:** Clicking any member card opens `<dialog class="band-member-dialog">` with the existing FLIP zoom animation. Members with multiple photos (Tiffany: 3; Joren, Danny, Kei: 2) show an accessible thumbnail switcher inside the modal (`44×55` px targets, `ArrowUp`/`ArrowDown` or click/tap to switch photos), while single-photo members (Robert: 1) show **no** switcher chrome.
 3. **`#photography` Section Unlocked:** `band-photo-1.png` is exported to `assets/img/gallery/` (`1318×879` JPEG + `800×534` WebP thumb) and added as entry #2 in `window.PL.photos` (`data/site-data.js`), automatically unhiding the `Photography` nav link, 2-column gallery, and `<dialog class="viewer">` lightbox.
-4. **Reproducible Crop Pipeline & Privacy Hygiene:** `.agents/build-portraits.py` deterministically generates all web derivatives from a local source folder (`--src <dir>`), preserves orientation (`exif_transpose`), strips raw camera EXIF/GPS metadata, keeps total added repo weight under `2.5 MB` (vs. `244 MB` raw masters), and adds zero `npm` dependencies.
+4. **Reproducible Crop Pipeline & Privacy Hygiene:** `.agents/build-portraits.py` deterministically generates all web derivatives from a local source folder (`--src <dir>`), preserves orientation (`exif_transpose`), strips raw camera EXIF/GPS metadata, keeps total added repo weight under `3 MB` (`~2.7 MB` measured vs. `244 MB` raw masters), and adds zero `npm` dependencies.
 5. **CSP, Copy Sync & Automated Verification:** `npm test` (`.agents/check.js`) exits `0`, verifying JS syntax, `data-photos` slug validity, primary-portrait sync, local asset existence, binary image pixel dimensions, `PL.photos` integrity, zero inline `style=""` attributes in `index.html` (`vercel.json` `style-src 'self'`), and updated `README.md` accuracy.
 6. **Manual / Preview Checks:** Keyboard-only navigation (`Tab`, `Enter`/`Space`, `ArrowLeft`/`ArrowRight`, `ArrowUp`/`ArrowDown`, `Escape`), `prefers-reduced-motion: reduce`, responsive layouts (`>=961px`, `<=960px`, `<=600px`), and zero CSP errors in the browser console.
 

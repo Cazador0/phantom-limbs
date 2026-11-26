@@ -16,24 +16,17 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 | Music, videos, press kit | `listen` and `watch` take ordinary share links from Spotify, Apple Music, SoundCloud, Bandcamp (its embed link) and YouTube (standard videos appear in a `16:9` grid; `/shorts/` links — or `reel: true` — appear in a vertical `9:16` Reels row); `press` takes the PDF's path. Each section appears once it has an entry. |
 | Contact address | `contact.email` |
 
-Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows and Contact.
+Anything left empty is hidden, along with its nav link. With the file as committed, the page shows Meet the Band, Shows, Photography and Contact.
 
-The bio, member names and roles are approved copy and live in `index.html`.
+The bio, member names and roles are approved copy and live in `index.html`. Member portraits (`assets/img/members/`) are declared on each `.band-member__portrait` via `<picture>` and optional `data-photos` slugs, generated with `python3 .agents/build-portraits.py --src <dir>` and checked by `npm test`.
 
 ## What still needs supplying
 
 - **Hero photo.** Until it exists the backdrop is an aubergine gradient. `index.html` has a comment showing where the photo goes.
-- **Member portraits** (4:5). Initials tiles stand in for now; put `.webp` + `.jpg` files under `assets/img/members/` and add a `<picture>` (or plain `<img>`) inside `.band-member__portrait` in `index.html`, then run `npm test` to verify file paths and dimensions:
-  ```html
-  <picture>
-    <source type="image/webp" srcset="assets/img/members/<slug>-400.webp 400w, assets/img/members/<slug>-880.webp 880w" sizes="(max-width: 600px) 68vw, (max-width: 819px) 216px, 150px">
-    <img src="assets/img/members/<slug>-880.jpg" alt="" width="880" height="1100" loading="lazy" decoding="async">
-  </picture>
-  ```
-- **Gallery photos**, with photographer credits and usage rights.
+- **Additional live/gallery photos**, with photographer credits and usage rights (two mural group shots are currently live in Photography).
 - **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
 - **An SVG master of the logo.**
-- **Photographer credit and rights** for the group photo in Meet the Band.
+- **Photographer credit and rights** for the mural shoot photos in Meet the Band and Photography.
 
 ## Running it locally
 
