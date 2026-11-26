@@ -220,6 +220,9 @@ else if (!checkMediaTags('group-photo', groupFig.replace(/<!--[\s\S]*?-->/g, '')
   fail('group-photo: missing <img> inside <figure class="group-photo">');
 }
 
+var proseHtml = (/<section\b[^>]*id="band"[^>]*>[\s\S]*?<div\s+class="prose">([\s\S]*?)<\/div>/i.exec(html) || [])[1] || '';
+var prosePlain = decodeEntities(proseHtml.replace(/<[^>]+>/g, ''));
+
 var cardRe = /<li\s+class="band-member">([\s\S]*?)<\/li>/g;
 var match, count = 0, totalMemberPoses = 0;
 while ((match = cardRe.exec(html)) !== null) {
@@ -230,6 +233,7 @@ while ((match = cardRe.exec(html)) !== null) {
   var initials = ((/data-initials="([^"]+)"/.exec(block) || [])[1] || '').trim();
   var expectedInitials = name.split(/\s+/).filter(Boolean).map(function (w) { return w[0].toUpperCase(); }).join('');
   if (!name) fail('band-member[' + count + ']: missing .band-member__name');
+  else if (prosePlain.indexOf(name) === -1) fail('band-member (' + name + '): name missing from #band .prose bio copy');
   if (label && label !== 'Enlarge ' + name) fail('band-member (' + name + '): aria-label ' + JSON.stringify(label) + ' != ' + JSON.stringify('Enlarge ' + name));
   if (initials && initials !== expectedInitials) fail('band-member (' + name + '): data-initials ' + JSON.stringify(initials) + ' != ' + JSON.stringify(expectedInitials));
 
