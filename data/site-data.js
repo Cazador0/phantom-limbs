@@ -48,7 +48,8 @@ window.PL = {
   /*
    * PLAYLIST (Floating Music Player)
    * Songs for the floating "Spinning 45" player in the corner of the page.
-   * Audio loads only when the visitor presses play. Leave empty to hide the player.
+   * Audio loads only when the visitor presses play. Leave empty to hide the player
+   * from visitors (open ?preview=player on the site to test the player while empty).
    * Put compressed .m4a or .mp3 files (160–192 kbps, ~3–5 MB each) in assets/audio/.
    *
    *   title        "Track title"                         required
