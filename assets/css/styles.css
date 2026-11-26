@@ -348,7 +348,7 @@ main { position: relative; }
 .lede { font: 400 var(--fs-lede)/1.4 var(--font-display); }
 
 /* ---------- Band ---------- */
-.group-photo { max-width: var(--column); margin: var(--s-8) auto 0; padding: 0 var(--s-6); }
+.group-photo { margin-bottom: var(--s-4); }
 .group-photo img { width: 100%; border-radius: var(--r-s); }
 
 .band__title { margin-top: 72px; }
@@ -651,7 +651,7 @@ main { position: relative; }
   .panel { width: calc(100% - 20px); margin-top: var(--s-4); border-radius: 18px; overflow: hidden; }
   .column { padding: 0 var(--s-5); gap: var(--s-5); }
   .hero { padding-bottom: var(--s-7); }
-  .group-photo { margin-top: 40px; padding: 0; max-width: none; }
+  .group-photo { margin: 0 calc(var(--s-5) * -1) var(--s-2); }
   .group-photo img { border-radius: 0; }
   .band { padding-inline: var(--s-5); scroll-padding-inline: var(--s-5); }
   .band-member { flex-basis: 68%; }
