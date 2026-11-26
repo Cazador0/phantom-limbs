@@ -11,10 +11,11 @@
 
 Implementation of this specification is complete when all of the following hold:
 
-1. **Zero-Config Empty State & `PL.playlist` Content Contract:**
+1. **Zero-Config Empty State, `?preview=player` Mode & `PL.playlist` Content Contract:**
    - `window.PL.playlist` is added to `data/site-data.js` as `playlist: []` with clear maintainer documentation.
-   - When `PL.playlist` has zero valid entries, `<aside class="player" data-player>` stays completely `hidden`, `body.has-player` is absent, and zero audio requests occur—preserving the live site cleanly until real band tracks are added.
-   - When `PL.playlist` contains `1+` valid tracks (`{ title, src, credits?, duration?, cover?, streamUrl?, streamLabel?, peaks? }`), the floating capsule renders automatically on page load in its **collapsed, paused** state with `<audio preload="none">` (`0 KB` audio downloaded until the visitor presses Play).
+   - When `PL.playlist` has zero valid entries on normal URLs, `<aside class="player" data-player>` stays completely `hidden`, `body.has-player` is absent, and zero audio requests occur—preserving the public site cleanly until real band tracks are added.
+   - Visiting `?preview=player` while `PL.playlist` is empty activates 3 clearly labeled 6-second synthesized WAV preview chords (`data:audio/wav;base64,...`, permitted via `media-src 'self' data:` in `vercel.json`) so the maintainer can test the live player on desktop and mobile before uploading real tracks.
+   - When `PL.playlist` contains `1+` valid tracks (`{ title, src, credits?, duration?, cover?, streamUrl?, streamLabel?, peaks? }`), `PL.playlist` takes precedence everywhere and the floating capsule renders in its **collapsed, paused** state with `<audio preload="none">` (`0 KB` audio downloaded until the visitor presses Play).
 2. **Scroll-Following Floating Placement & Safe-Area Geometry:**
    - **Desktop & Tablet (`>600px`):** Fixed at `right: var(--s-5); bottom: var(--s-5); z-index: 18` (`24px` bottom-right inset), floating smoothly above page panels as the visitor scrolls from the dark `#1B1521` hero across the `#F5F0EA` ivory sections while staying underneath native `<dialog>` Top Layer modals (`.menu`, `.band-member-dialog`, `.viewer`).
    - **Mobile (`<=600px`):** Centered floating dock above the OS home indicator (`left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom))`), with `pointer-events: none` on the outer wrapper and `pointer-events: auto` on the interactive pill/card so side gutters never block page taps, and zero horizontal overflow down to `320px`.

@@ -13,7 +13,7 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 | Show dates | `shows` — one line per show (`date, venue, city, time, support, url, linkText, status`). Past dates move to "Past Performances" automatically. |
 | Gallery photos | `photos` — add files under `assets/img/gallery/` and list them. The Photography section appears once there are two. |
 | Social links | `social` — the Instagram, YouTube and Facebook URLs. They show in the header, the phone menu and the footer. |
-| Floating music player | `playlist` — put compressed `.m4a` or `.mp3` files under `assets/audio/` and list them. The floating Spinning 45 player appears once there is one entry. |
+| Floating music player | `playlist` — put compressed `.m4a` or `.mp3` files under `assets/audio/` and list them. The floating Spinning 45 player appears once there is one entry (or at `?preview=player` with demo tones while `playlist` is empty). |
 | Music, videos, press kit | `listen` and `watch` take ordinary share links from Spotify, Apple Music, SoundCloud, Bandcamp (its embed link) and YouTube (standard videos appear in a `16:9` grid; `/shorts/` links — or `reel: true` — appear in a vertical `9:16` Reels row); `press` takes the PDF's path. Each section appears once it has an entry. |
 | Contact address | `contact.email` |
 

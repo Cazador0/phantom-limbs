@@ -25,6 +25,7 @@ The official site for the Dallas band Phantom Limbs, live at https://www.phantom
 - styles and fonts from this site only
 - scripts from this site and Vercel's analytics host
 - images from this site, `data:` addresses and YouTube thumbnails
+- audio from this site and `data:` addresses
 - network requests to this site and Vercel's analytics hosts
 - frames from any `https` address
 

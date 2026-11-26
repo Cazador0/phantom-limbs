@@ -564,6 +564,41 @@
     return out;
   }
 
+  function makePreviewWav(freqs) {
+    var rate = 11025, secs = 6, samples = rate * secs, dataLen = samples * 2;
+    var buf = new ArrayBuffer(44 + dataLen), view = new DataView(buf), bytes = new Uint8Array(buf);
+    function str(off, s) { for (var i = 0; i < s.length; i++) bytes[off + i] = s.charCodeAt(i); }
+    str(0, 'RIFF'); view.setUint32(4, 36 + dataLen, true); str(8, 'WAVE');
+    str(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    str(36, 'data'); view.setUint32(40, dataLen, true);
+    for (var s = 0; s < samples; s++) {
+      var t = s / rate;
+      var env = Math.min(1, t / 0.04) * Math.min(1, (secs - t) / 0.18) * Math.exp(-t * 0.28) * (0.88 + 0.12 * Math.sin(2 * Math.PI * 4.2 * t));
+      var sum = 0;
+      for (var f = 0; f < freqs.length; f++) sum += Math.sin(2 * Math.PI * freqs[f] * t);
+      view.setInt16(44 + s * 2, Math.round((sum / freqs.length) * env * 14000), true);
+    }
+    var bin = '';
+    for (var p = 0; p < bytes.length; p += 8192) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(p, p + 8192));
+    }
+    return 'data:audio/wav;base64,' + window.btoa(bin);
+  }
+
+  function previewTracks() {
+    return [
+      { title: 'Soundcheck I (Preview)', freqs: [174.61, 220.0, 261.63, 329.63], credits: 'Preview tone · PL sleeve', duration: '0:06', cover: '', streamUrl: '' },
+      { title: 'Soundcheck II (Preview)', freqs: [146.83, 174.61, 220.0, 329.63], credits: 'Preview tone · Custom cover', duration: '0:06', cover: 'assets/img/band-photo-960.webp', streamUrl: '' },
+      { title: 'Soundcheck III (Preview)', freqs: [220.0, 261.63, 329.63, 392.0], credits: 'Preview tone · Auto-advance', duration: '0:06', cover: '', streamUrl: '' }
+    ].map(function (t, i) {
+      t.src = '';
+      t.streamLabel = '';
+      t.peaks = trackPeaks(null, t.title + ':' + i);
+      return t;
+    });
+  }
+
   function initPlayer() {
     var player = $('[data-player]');
     if (!player) return;
@@ -589,6 +624,9 @@
       };
     }).filter(Boolean);
 
+    if (!tracks.length && /(?:^\?|&)preview=player(?:&|$)/.test(window.location.search || '')) {
+      tracks = previewTracks();
+    }
     if (!tracks.length) return;
     player.hidden = false;
     document.body.classList.add('has-player');
@@ -736,7 +774,9 @@
     function ensureLoaded() {
       if (loadedIndex === index) return;
       loadFailed = false;
-      audio.src = tracks[index].src;
+      var t = tracks[index];
+      if (!t.src && t.freqs) t.src = makePreviewWav(t.freqs);
+      audio.src = t.src;
       loadedIndex = index;
     }
 
