@@ -1,6 +1,6 @@
 # Specification — Replace Band Group Photo & Add Robert Tracy Portrait #2 (`002-band-photo-and-robert-portrait`)
 
-- **Status:** `Draft — Ready for Human Review`
+- **Status:** `Implemented`
 - **Builds On:** `specs/001-member-profiles/spec.md` (`PR #36`, merged at `81edc77`)
 - **Branch:** `claude/band-photo-and-robert-portrait`
 - **Target Site:** `https://www.phantomlimbsband.com/` (zero-build static HTML/CSS/JS on Vercel)
