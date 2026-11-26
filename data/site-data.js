@@ -42,7 +42,8 @@ window.PL = {
    *   credit  "Photographer name"               optional, shown in the viewer
    */
   photos: [
-    { src: "assets/img/group-mural-hd-1600.jpg", thumb: "assets/img/group-mural-hd-960.webp", width: 1600, height: 1504, alt: "Phantom Limbs, all five members standing outdoors with their instruments in front of a mural", credit: "" }
+    { src: "assets/img/group-mural-hd-1600.jpg", thumb: "assets/img/group-mural-hd-960.webp", width: 1600, height: 1504, alt: "Phantom Limbs, all five members standing outdoors with their instruments in front of a mural", credit: "" },
+    { src: "assets/img/gallery/band-mural-pose-1318.jpg", thumb: "assets/img/gallery/band-mural-pose-800.webp", width: 1318, height: 879, alt: "Phantom Limbs, all five members standing in front of an outdoor mural holding their instruments horizontally", credit: "" }
   ],
 
   /*

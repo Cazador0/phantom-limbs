@@ -78,20 +78,78 @@ function validYoutube(v) {
   if (v && v.reel !== undefined && typeof v.reel !== 'boolean') fail('watch[' + i + ']: reel must be boolean, got ' + JSON.stringify(v.reel));
 });
 
+function readImageDims(relPath) {
+  var full = path.resolve(root, relPath.replace(/^\//, ''));
+  if (full.indexOf(root + path.sep) !== 0 || !fs.existsSync(full) || !fs.statSync(full).isFile()) return null;
+  var buf = fs.readFileSync(full);
+  if (buf.length >= 24 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) {
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+  }
+  if (buf.length >= 30 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP') {
+    var chunk = buf.toString('ascii', 12, 16);
+    if (chunk === 'VP8 ' && buf[23] === 0x9D && buf[24] === 0x01 && buf[25] === 0x2A) {
+      return { width: buf.readUInt16LE(26) & 0x3FFF, height: buf.readUInt16LE(28) & 0x3FFF };
+    }
+    if (chunk === 'VP8L' && buf[20] === 0x2F) {
+      var bits = buf.readUInt32LE(21);
+      return { width: (bits & 0x3FFF) + 1, height: ((bits >> 14) & 0x3FFF) + 1 };
+    }
+    if (chunk === 'VP8X') {
+      return { width: buf.readUIntLE(24, 3) + 1, height: buf.readUIntLE(27, 3) + 1 };
+    }
+  }
+  if (buf.length >= 4 && buf[0] === 0xFF && buf[1] === 0xD8) {
+    var pos = 2;
+    while (pos + 1 < buf.length) {
+      if (buf[pos] !== 0xFF) break;
+      while (pos < buf.length && buf[pos] === 0xFF) pos++;
+      if (pos >= buf.length) break;
+      var m = buf[pos++];
+      if (m === 0xD8 || m === 0xD9 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)) continue;
+      if (pos + 2 > buf.length) break;
+      var segLen = buf.readUInt16BE(pos);
+      if (segLen < 2 || pos + segLen > buf.length) break;
+      if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) {
+        if (pos + 7 > buf.length) break;
+        return { width: buf.readUInt16BE(pos + 5), height: buf.readUInt16BE(pos + 3) };
+      }
+      pos += segLen;
+    }
+  }
+  return null;
+}
+
+function checkImageDims(who, relPath, expW, expH) {
+  var dims = readImageDims(relPath);
+  if (!dims) fail(who + ': could not read dimensions of ' + relPath);
+  else if (dims.width !== expW || dims.height !== expH) {
+    fail(who + ': ' + relPath + ' is ' + dims.width + 'x' + dims.height + ', expected ' + expW + 'x' + expH);
+  }
+}
+
 (PL.photos || []).forEach(function (p, i) {
   if (!p || !p.src) { fail('photos[' + i + ']: missing src'); return; }
-  if (!/^https?:/i.test(p.src) && !fs.existsSync(path.join(root, p.src.replace(/^\//, '')))) {
+  var localSrc = !/^https?:/i.test(p.src);
+  if (localSrc && !fs.existsSync(path.join(root, p.src.replace(/^\//, '')))) {
     fail('photos[' + i + ']: file not found: ' + p.src);
   }
   if (p.thumb && !/^https?:/i.test(p.thumb) && !fs.existsSync(path.join(root, p.thumb.replace(/^\//, '')))) {
     fail('photos[' + i + ']: thumb file not found: ' + p.thumb);
   }
   if (!p.width || !p.height) fail('photos[' + i + ']: missing width/height');
+  else if (localSrc && fs.existsSync(path.join(root, p.src.replace(/^\//, '')))) {
+    checkImageDims('photos[' + i + ']', p.src, p.width, p.height);
+  }
   if (typeof p.alt !== 'string' || !p.alt.trim()) fail('photos[' + i + ']: missing alt text');
 });
 
-// 3. Copy sync checks in index.html
+// 3. Copy sync and CSP checks in index.html
 var html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+var strippedHtml = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<script\b[\s\S]*?<\/script>/gi, '');
+if (/<[a-z][^>]*\sstyle\s*=/i.test(strippedHtml)) {
+  fail('index.html contains an inline style= attribute (blocked by Content-Security-Policy in vercel.json).');
+}
+
 function decodeEntities(s) {
   return String(s || '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
@@ -118,7 +176,7 @@ function checkLocalAsset(who, rawUrl) {
 }
 
 var cardRe = /<li\s+class="band-member">([\s\S]*?)<\/li>/g;
-var match, count = 0;
+var match, count = 0, totalMemberPoses = 0;
 while ((match = cardRe.exec(html)) !== null) {
   count++;
   var block = match[1];
@@ -132,6 +190,7 @@ while ((match = cardRe.exec(html)) !== null) {
 
   var who = 'band-member (' + (name || count) + ')';
   var cleanBlock = block.replace(/<!--[\s\S]*?-->/g, '');
+  var primaryImgSrc = '';
   var tagRe = /<(img|source)\b[^>]*>/gi, tagMatch;
   while ((tagMatch = tagRe.exec(cleanBlock)) !== null) {
     var tag = tagMatch[0];
@@ -140,10 +199,12 @@ while ((match = cardRe.exec(html)) !== null) {
     var srcset = getAttr(tag, 'srcset');
     if (isImg) {
       if (!src || !src.trim()) fail(who + ': <img> missing src');
-      else checkLocalAsset(who, src);
+      else { checkLocalAsset(who, src); primaryImgSrc = src.trim(); }
       var w = getAttr(tag, 'width'), h = getAttr(tag, 'height');
       if (!/^[1-9]\d*$/.test(String(w || '').trim()) || !/^[1-9]\d*$/.test(String(h || '').trim())) {
         fail(who + ': <img> requires positive numeric width and height');
+      } else if (src && !/^(?:https?:|data:)/i.test(src)) {
+        checkImageDims(who, src.trim(), +w, +h);
       }
     } else {
       if (srcset === null) fail(who + ': <source> missing srcset');
@@ -156,6 +217,30 @@ while ((match = cardRe.exec(html)) !== null) {
       });
     }
   }
+
+  var portraitTag = (/<div\s+class="band-member__portrait"[^>]*>/i.exec(cleanBlock) || [])[0] || '';
+  var rawPhotos = getAttr(portraitTag, 'data-photos');
+  if (rawPhotos !== null) {
+    var slugs = rawPhotos.split(',').map(function (s) { return s.trim(); });
+    var seenSlugs = {};
+    if (!slugs.length || !slugs[0]) fail(who + ': empty data-photos attribute');
+    slugs.forEach(function (slug) {
+      if (!/^[a-z0-9-]+$/.test(slug)) { fail(who + ': invalid data-photos slug ' + JSON.stringify(slug)); return; }
+      if (seenSlugs[slug]) fail(who + ': duplicate data-photos slug ' + slug);
+      seenSlugs[slug] = true;
+      totalMemberPoses++;
+      var base = 'assets/img/members/' + slug;
+      checkLocalAsset(who, base + '-400.webp');
+      checkLocalAsset(who, base + '-880.webp');
+      checkLocalAsset(who, base + '-880.jpg');
+      checkImageDims(who, base + '-400.webp', 400, 500);
+      checkImageDims(who, base + '-880.webp', 880, 1100);
+      checkImageDims(who, base + '-880.jpg', 880, 1100);
+    });
+    if (slugs[0] && primaryImgSrc && primaryImgSrc !== 'assets/img/members/' + slugs[0] + '-880.jpg') {
+      fail(who + ': primary <img> ' + primaryImgSrc + ' does not match first data-photos slug ' + slugs[0]);
+    }
+  }
 }
 if (!count) fail('No .band-member items found in index.html');
 
@@ -163,4 +248,4 @@ if (errors.length) {
   console.error('Site check failed:\n- ' + errors.join('\n- '));
   process.exit(1);
 }
-console.log('OK: syntax, site-data (' + (PL.shows || []).length + ' shows, ' + (PL.photos || []).length + ' photos), and copy sync (' + count + ' band members) passed.');
+console.log('OK: syntax, site-data (' + (PL.shows || []).length + ' shows, ' + (PL.photos || []).length + ' photos), and copy sync (' + count + ' band members, ' + totalMemberPoses + ' portrait poses) passed.');
