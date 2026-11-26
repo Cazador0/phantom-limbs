@@ -175,21 +175,7 @@ function checkLocalAsset(who, rawUrl) {
   }
 }
 
-var cardRe = /<li\s+class="band-member">([\s\S]*?)<\/li>/g;
-var match, count = 0, totalMemberPoses = 0;
-while ((match = cardRe.exec(html)) !== null) {
-  count++;
-  var block = match[1];
-  var name = decodeEntities((/<span\s+class="band-member__name">([^<]+)<\/span>/.exec(block) || [])[1] || '').trim();
-  var label = decodeEntities((/aria-label="([^"]+)"/.exec(block) || [])[1] || '').trim();
-  var initials = ((/data-initials="([^"]+)"/.exec(block) || [])[1] || '').trim();
-  var expectedInitials = name.split(/\s+/).filter(Boolean).map(function (w) { return w[0].toUpperCase(); }).join('');
-  if (!name) fail('band-member[' + count + ']: missing .band-member__name');
-  if (label && label !== 'Enlarge ' + name) fail('band-member (' + name + '): aria-label ' + JSON.stringify(label) + ' != ' + JSON.stringify('Enlarge ' + name));
-  if (initials && initials !== expectedInitials) fail('band-member (' + name + '): data-initials ' + JSON.stringify(initials) + ' != ' + JSON.stringify(expectedInitials));
-
-  var who = 'band-member (' + (name || count) + ')';
-  var cleanBlock = block.replace(/<!--[\s\S]*?-->/g, '');
+function checkMediaTags(who, cleanBlock) {
   var primaryImgSrc = '';
   var tagRe = /<(img|source)\b[^>]*>/gi, tagMatch;
   while ((tagMatch = tagRe.exec(cleanBlock)) !== null) {
@@ -213,10 +199,43 @@ while ((match = cardRe.exec(html)) !== null) {
     if (srcset !== null) {
       if (!srcset.trim()) fail(who + ': empty srcset');
       else srcset.split(',').forEach(function (part) {
-        checkLocalAsset(who, part.trim().split(/\s+/)[0]);
+        var tokens = part.trim().split(/\s+/);
+        var url = tokens[0], desc = tokens[1] || '';
+        checkLocalAsset(who, url);
+        var wm = /^([1-9]\d*)w$/.exec(desc);
+        if (wm && !/^(?:https?:|data:)/i.test(url)) {
+          var dims = readImageDims(url);
+          if (!dims) fail(who + ': could not read dimensions of ' + url);
+          else if (dims.width !== +wm[1]) fail(who + ': ' + url + ' width is ' + dims.width + ', srcset declares ' + wm[1] + 'w');
+        }
       });
     }
   }
+  return primaryImgSrc;
+}
+
+var groupFig = (/<figure\s+class="group-photo[^"]*"[^>]*>([\s\S]*?)<\/figure>/i.exec(html) || [])[1];
+if (!groupFig) fail('Missing <figure class="group-photo"> in index.html');
+else if (!checkMediaTags('group-photo', groupFig.replace(/<!--[\s\S]*?-->/g, ''))) {
+  fail('group-photo: missing <img> inside <figure class="group-photo">');
+}
+
+var cardRe = /<li\s+class="band-member">([\s\S]*?)<\/li>/g;
+var match, count = 0, totalMemberPoses = 0;
+while ((match = cardRe.exec(html)) !== null) {
+  count++;
+  var block = match[1];
+  var name = decodeEntities((/<span\s+class="band-member__name">([^<]+)<\/span>/.exec(block) || [])[1] || '').trim();
+  var label = decodeEntities((/aria-label="([^"]+)"/.exec(block) || [])[1] || '').trim();
+  var initials = ((/data-initials="([^"]+)"/.exec(block) || [])[1] || '').trim();
+  var expectedInitials = name.split(/\s+/).filter(Boolean).map(function (w) { return w[0].toUpperCase(); }).join('');
+  if (!name) fail('band-member[' + count + ']: missing .band-member__name');
+  if (label && label !== 'Enlarge ' + name) fail('band-member (' + name + '): aria-label ' + JSON.stringify(label) + ' != ' + JSON.stringify('Enlarge ' + name));
+  if (initials && initials !== expectedInitials) fail('band-member (' + name + '): data-initials ' + JSON.stringify(initials) + ' != ' + JSON.stringify(expectedInitials));
+
+  var who = 'band-member (' + (name || count) + ')';
+  var cleanBlock = block.replace(/<!--[\s\S]*?-->/g, '');
+  var primaryImgSrc = checkMediaTags(who, cleanBlock);
 
   var portraitTag = (/<div\s+class="band-member__portrait"[^>]*>/i.exec(cleanBlock) || [])[0] || '';
   var rawPhotos = getAttr(portraitTag, 'data-photos');
