@@ -1,7 +1,7 @@
 # Specification — Bio Editorial Typography & Readability Polish (`003-bio-typography-polish`)
 
 - **Status:** `Draft — Ready for Human Review`
-- **Selected Direction:** Option 1 (Recommended) — Centered Serif Hook + Hairline Divider + Scannable Name Emphasis + Fraunces Closing Coda *(Alternatives 2 & 3 documented in Section 6 if preferred)*
+- **Selected Direction:** Option 8 Hybrid — Option 6 `3px` Aubergine Left-Rail Opener + Option 7 Asymmetric `1.38fr : 1fr` "Sound Callout" Deck (`8A` clean `Fraunces` names default; `8B` highlighter-ribbon variant optional)
 - **Branch:** `bio-typography-polish`
 - **Target Site:** `https://www.phantomlimbsband.com/` (zero-build static HTML/CSS/JS on Vercel)
 
@@ -11,31 +11,22 @@
 
 Implementation of this specification is complete when all of the following hold:
 
-1. **Approved Copy Preserved Verbatim:** Every word, punctuation mark, and entity across all three bio paragraphs in `index.html` remains 100% identical to the approved copy (`<p class="lede">` stays plain text in sync with `<meta name="description">` and `<meta property="og:description">`).
-2. **Three-Part Editorial Hierarchy:**
-   - **Hook (`.lede`):** Centered (`max-width: 34ch; text-align: center; text-wrap: balance`) in optical-sized `Fraunces` (`clamp(1.375rem, 1.15rem + .95vw, 1.6875rem)`, `line-height: 1.42`) with a centered `48px` aubergine-tinted hairline rule (`::after`) beneath it, eliminating the orphaned 3-word tail and harmonizing with the centered heading and photo above.
-   - **Lineup Story (Paragraph 2):** Comfortable `600px` reading measure in `Inter` (`line-height: 1.76`, `color: var(--text-muted)` `#3A3140`, `~10.2:1` contrast) with the five band member names subtly weighted (`<strong class="prose__name">` in `600` `var(--ink)`) and `Lovers & Lunatics` accented (`<span class="prose__act">` in `500` `var(--aubergine)`, `~9.2:1` contrast) so visitors can scan all five musicians in one glance.
-   - **Closing Coda (`.prose__coda`):** Centered optical-sized `Fraunces` (`1.1875rem / 1.52`, `text-wrap: balance`, `color: var(--ink)`) separated by a soft hairline top border, giving the closing musical statement distinct cadence before `THE BAND` portrait row.
-3. **True Variable Font Rendering (Zero Faux Italics, Zero External Requests):** Uses only the self-hosted `fraunces-latin.woff2` (`opsz 9..144`, `wght 400..600`) and `inter-latin.woff2` (`wght 400..600`, `calt` contextual dashes/slashes) variable axes — no synthetic `font-style: italic` and no third-party font requests.
-4. **WCAG 2.2 AA Contrast & Responsive Readability:** All text roles (`--ink` `~14:1`, `--text-muted` `~10.2:1`, `--aubergine` `~9.2:1` on `--panel-solid`) exceed WCAG 2.2 AA (`4.5:1`) and AAA (`7:1`), and line lengths scale cleanly at desktop (`1280px`), tablet (`960px`), and phone (`<=600px`) widths.
-5. **Automated Copy-Sync & CSP Verification:** `npm test` (`.agents/check.js`) exits `0`, verifying `<p class="lede">` meta sync, absence of inline `style=` attributes, and that all five `.band-member__name` values appear in the `#band .prose` bio paragraph.
+1. **Approved Copy Preserved Verbatim:** Every word, punctuation mark, and HTML entity across all three bio paragraphs in `index.html` remains 100% identical to the approved copy (`<p class="lede">` stays plain text in exact sync with `<meta name="description">` and `<meta property="og:description">`).
+2. **Option 8 Hybrid Layout (`696px` Full-Column Alignment):**
+   - **Row 1 — Left-Rail Opener (`#band .lede`):** Spans full `696px` width (`grid-column: 1 / -1`) anchored on the left by a `3px solid var(--aubergine)` vertical rail (`padding-left: 1.5rem`), set in optical-sized `Fraunces` (`clamp(1.375rem, 1.15rem + .9vw, 1.5625rem)`, `line-height: 1.36`), aligned flush with the left edge of `.group-photo`.
+   - **Row 2 Left — Lineup Story (`1.38fr`):** Warm `var(--text-muted)` (`#3A3140`, `~10.2:1` contrast) `Inter` (`1rem / 1.74`, `calt` contextual dashes/slashes) with non-breaking (`white-space: nowrap`) emphasized member names (`<strong class="prose__name">`) and `600`-weight aubergine `<span class="prose__act">Lovers &amp; Lunatics</span>` (`~9.2:1` contrast).
+   - **Row 2 Right — Sound Callout (`1fr`, `.prose__coda`):** Tinted aubergine-ivory callout block (`background: rgb(84 42 105 / .065); border-top: 2px solid var(--aubergine); border-radius: 0 0 var(--r-s) var(--r-s); padding: 1.25rem 1.375rem`) in optical-sized `Fraunces` (`1.09375rem / 1.52`, `color: var(--ink)`), aligned flush with the right edge of `.group-photo`.
+3. **Responsive Phone Stack (`<=680px`):** Collapses cleanly to a single column (`grid-template-columns: 1fr`) while retaining both the `3px` vertical left rail on `.lede` and the `2px` top-bordered callout box on `.prose__coda`, with zero horizontal overflow at `320px–390px`.
+4. **True Variable Font Rendering & WCAG 2.2 AA Contrast:** Uses only self-hosted `fraunces-latin.woff2` (`opsz 9..144`, `wght 400..600`) and `inter-latin.woff2` (`wght 400..600`, `calt`) upright Roman variable axes (zero synthetic italics, zero external requests), with all text contrast ratios `>9:1`.
+5. **Automated Copy-Sync & CSP Verification:** `npm test` (`.agents/check.js`) exits `0`, verifying `<p class="lede">` meta sync, absence of inline `style=` attributes, and that all five `.band-member__name` values appear in `#band .prose`.
 
 ---
 
-## 2. Diagnosis of Current Bio Block (`main` @ `0f657dc`)
+## 2. Technical Contracts
 
-1. **Alignment clash:** `MEET PHANTOM LIMBS`, the `696px` group photo above, and `THE BAND` cards below are all centered, while `.prose` snaps hard left (`max-width: 620px`), leaving `R&B and beyond.` dangling as a 3-word orphan on line 4 of `.lede`.
-2. **Uniform weight in a 40-word roll-call sentence:** Paragraph 2 introduces 5 musicians, 5 instruments, a former DFW jazz group, and a date range (`2018–2026`) in uniform `400`-weight `#1B1521` Inter, forcing the eye to parse dense prose to find the band members' names.
-3. **Flat closing cadence:** Paragraph 3 (*"Together, they create a sound shaped by distinct perspectives..."*) acts as the artistic thesis of the band, yet is styled identically to the biographical roll-call above it.
-4. **Font binary constraint:** Binary inspection of `assets/fonts/fraunces-latin.woff` and `inter-latin.woff` confirms both contain `fvar` variable tables (`Fraunces`: `opsz 9..144`, `wght 400..600`; `Inter`: `wght 400..600`, `GSUB` `calt`), with **upright Roman outlines only**. Styling emphasis through weight (`500`/`600`), color tokens, optical sizing, and spacing avoids browser-synthesized faux italics.
+### 2.1 `index.html` Markup Contract (`#band .prose`)
 
----
-
-## 3. Technical Contracts
-
-### 3.1 `index.html` Markup Contract (`#band .prose`)
-
-Keep `<p class="lede">` completely unchanged (plain text, preserving exact sync with `<meta name="description">` and `<meta property="og:description">`). Add semantic `<strong class="prose__name">`, `<span class="prose__act">`, and `class="prose__coda"` on paragraphs 2 and 3 with **zero wording changes**:
+Keep `<p class="lede">` untouched plain text. Add `<strong class="prose__name">`, `<span class="prose__act">`, and `class="prose__coda"` on paragraphs 2 and 3 with **zero wording changes**:
 
 ```html
       <div class="prose">
@@ -45,82 +36,72 @@ Keep `<p class="lede">` completely unchanged (plain text, preserving exact sync 
       </div>
 ```
 
-### 3.2 `assets/css/styles.css` Typography Contract
+### 2.2 `assets/css/styles.css` Typography & Grid Contract
 
-Scope editorial enhancements cleanly so `.prose` / `.lede` tokens remain reusable while `#band`'s 3-part bio gets tailored rhythm:
+Scope the asymmetric 2-column hybrid layout to `#band .prose` so generic `.prose` remains a safe single-column default if reused elsewhere:
 
 ```css
-.prose {
-  max-width: 600px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 1.375rem;
-  color: var(--text-muted); line-height: 1.76;
-  font-feature-settings: "calt" 1;
-}
+.prose { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--s-5); font-feature-settings: "calt" 1; }
 .prose p { text-wrap: pretty; }
-.lede {
-  max-width: 34ch; margin: 0 auto;
-  color: var(--ink); text-align: center; text-wrap: balance;
-  font: 400 clamp(1.375rem, 1.15rem + .95vw, 1.6875rem)/1.42 var(--font-display);
-  letter-spacing: -.005em; font-optical-sizing: auto;
+.lede { font: 400 var(--fs-lede)/1.4 var(--font-display); font-optical-sizing: auto; }
+
+#band .prose {
+  max-width: none; width: 100%;
+  display: grid; grid-template-columns: minmax(0, 1.38fr) minmax(0, 1fr);
+  gap: 1.75rem var(--s-6); align-items: stretch;
+  color: var(--text-muted); font-size: 1rem; line-height: 1.74;
 }
-.lede::after {
-  content: ""; display: block; width: 48px; height: 1px;
-  margin: var(--s-5) auto var(--s-1);
-  background: color-mix(in srgb, var(--aubergine) 45%, var(--hairline));
+#band .lede {
+  grid-column: 1 / -1;
+  padding: 2px 0 2px var(--s-5);
+  border-left: 3px solid var(--aubergine);
+  color: var(--ink);
+  font-size: clamp(1.375rem, 1.15rem + .9vw, 1.5625rem); line-height: 1.36; letter-spacing: -.008em;
 }
-.prose__name { font-weight: 600; color: var(--ink); }
-.prose__act { font-weight: 500; color: var(--aubergine); }
+.prose__name { font: 500 1.075rem/1 var(--font-display); color: var(--ink); white-space: nowrap; }
+.prose__act { font-weight: 600; color: var(--aubergine); white-space: nowrap; }
 .prose__coda {
-  margin-top: var(--s-1); padding-top: 1.125rem;
-  border-top: 1px solid color-mix(in srgb, var(--hairline) 65%, transparent);
-  color: var(--ink); text-align: center; text-wrap: balance;
-  font: 400 clamp(1.0625rem, 1rem + .25vw, 1.1875rem)/1.52 var(--font-display);
-  font-optical-sizing: auto;
+  display: flex; align-items: center;
+  padding: 1.25rem 1.375rem;
+  border-top: 2px solid var(--aubergine); border-radius: 0 0 var(--r-s) var(--r-s);
+  background: rgb(84 42 105 / .065); color: var(--ink);
+  font: 400 1.09375rem/1.52 var(--font-display); font-optical-sizing: auto;
+}
+@media (max-width: 680px) {
+  #band .prose { grid-template-columns: 1fr; gap: 1.375rem; }
+  #band .lede { padding-left: 1.125rem; }
 }
 ```
 
-At `@media (max-width: 600px)`:
-- `.prose` inherits `font-size: 1rem` (`16px` body) with `line-height: 1.72`, keeping paragraph 2 comfortable on narrow `320px–390px` screens while `.lede` (`~1.375rem`) and `.prose__coda` (`~1.0625rem`) stay balanced without awkward 1-word orphans.
+*(Note — Optional `8B` Highlighter-Ribbon Swap: If `8B` is preferred over `8A`, `.prose__name` uses `font-weight: 600; color: var(--ink); white-space: nowrap; background: linear-gradient(transparent 60%, rgb(84 42 105 / .16) 60%); padding: 0 2px; border-radius: 2px;` instead of `Fraunces`.)*
 
-### 3.3 `.agents/check.js` & `README.md` Sync
+### 2.3 `.agents/check.js` & `README.md` Sync
 
-1. **`.agents/check.js`:**
-   - Keep the existing `<p class="lede">` == `<meta name="description">` == `<meta property="og:description">` check intact.
-   - Add a member-name bio sync check (enforcing `CLAUDE.md`'s rule *"Member names and roles: the bio paragraph and each member card"*): strip HTML tags from `#band .prose`, decode entities, and verify every `.band-member__name` from `#band-track` appears in the bio paragraph.
-2. **`README.md`:**
-   - Sync `Meet the Band` → `The Band` where referencing the visible navigation label updated in commit `0f657dc`.
+1. **`.agents/check.js`:** Strip HTML tags from `#band .prose`, decode entities, and verify every `.band-member__name` from `#band-track` appears in the bio paragraph (catching any future card/bio name drift).
+2. **`README.md`:** Sync `Meet the Band` → `The Band` where referencing the visible navigation label updated in commit `0f657dc`.
 
 ---
 
-## 4. Acceptance Scenarios & Boundary Cases
+## 3. Acceptance Scenarios & Boundary Cases
 
-1. **Given** a desktop (`1280px`) or tablet (`960px`) viewport, **When** `#band` renders, **Then** `.lede` centers cleanly across balanced lines with no 1–2 word orphan tail, followed by the `48px` hairline rule, scannable member names in paragraph 2, and the centered `Fraunces` `.prose__coda` paragraph above `THE BAND`.
-2. **Given** a narrow mobile viewport (`375px` / `320px`), **When** `#band .prose` wraps, **Then** no horizontal overflow occurs, inline `<strong class="prose__name">` names wrap naturally at normal word boundaries, and `.lede` / `.prose__coda` scale smoothly via `clamp(...)`.
-3. **Given** a future maintainer renames a member card in `index.html` without updating `.prose`, **When** `npm test` runs, **Then** `.agents/check.js` fails immediately naming the out-of-sync member.
+1. **Given** a desktop (`1280px`) or tablet (`960px`) viewport, **When** `#band` renders, **Then** `#band .lede`'s `3px` left rail aligns flush with the left edge of `.group-photo`, and `.prose__coda`'s right edge aligns flush with the right edge of `.group-photo` (`696px` span).
+2. **Given** a phone viewport (`<=680px`, tested down to `320px`), **When** `#band .prose` collapses to `1fr`, **Then** `.lede`, the lineup paragraph, and `.prose__coda` stack cleanly with zero horizontal overflow (`white-space: nowrap` keeps each 2-word musician name intact without exceeding `280px` inner width).
+3. **Given** a future edit renames a member card without updating `#band .prose`, **When** `npm test` runs, **Then** `.agents/check.js` exits non-zero naming the missing member.
 
 ---
 
-## 5. Explicit Exclusions (Out of Scope)
+## 4. Explicit Exclusions (Out of Scope)
 
 - **No wording, spelling, or punctuation edits** to the approved bio copy.
-- **No new font files, italic subsets, or external CDN requests** (`assets/fonts/` stays untouched).
-- **No JavaScript changes** (`assets/js/main.js` and `data/site-data.js` untouched).
+- **No font file, JavaScript (`main.js`), or `site-data.js` changes.**
 
 ---
 
-## 6. Alternative Directions Considered (Easy Swaps Before Execution)
-
-If after reviewing the visual renders you prefer one of the alternatives over Option 1:
-- **Alternative A (Option 2 — Classic Magazine Drop-Cap + All-Fraunces Book Serif):** Left-aligned `560px` column set entirely in optical-sized `Fraunces` (`1.125rem / 1.72`) with a 2-line aubergine `::first-letter` drop cap `"D"` on `.lede` and `600`-weight member names.
-- **Alternative B (Option 3 — Frosted Liner-Note Card + 2-Column Desktop Grid):** Places `.prose` inside a `rgb(255 255 255 / .45)` hairline card (`max-width: 696px`, matching `.group-photo` width), with the centered `Fraunces` `.lede` spanning both columns over a hairline divider and paragraphs 2 & 3 side-by-side on `>680px` screens.
-
----
-
-## 7. Blast Radius & File Map
+## 5. Blast Radius & File Map
 
 | File Path | Action | Responsibility |
 |---|---|---|
-| `index.html` | `modify` | Add `<strong class="prose__name">`, `<span class="prose__act">`, and `class="prose__coda"` in `#band .prose` (zero word changes) |
-| `assets/css/styles.css` | `modify` | Update `.prose` / `.lede` and add `.lede::after`, `.prose__name`, `.prose__act`, `.prose__coda` (~22 LOC) |
-| `.agents/check.js` | `modify` | Verify every `.band-member__name` appears in `#band .prose` text |
-| `README.md` | `modify` | Sync `The Band` section/nav naming with commit `0f657dc` |
+| `index.html` | `modify` | Add `<strong class="prose__name">`, `<span class="prose__act">`, and `class="prose__coda"` in `#band .prose` |
+| `assets/css/styles.css` | `modify` | Add `#band .prose` `1.38fr : 1fr` grid, `3px` `.lede` left rail, `.prose__name` / `.prose__act`, `.prose__coda` callout, and `<=680px` stack (~24 LOC) |
+| `.agents/check.js` | `modify` | Verify every `.band-member__name` appears in `#band .prose` |
+| `README.md` | `modify` | Sync `The Band` nav/section naming with commit `0f657dc` |
