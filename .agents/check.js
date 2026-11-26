@@ -69,6 +69,49 @@ function validYoutube(v) {
   if (!s || !String(s.venue || '').trim()) fail('shows[' + i + ']: missing venue');
 });
 
+var MAX_AUDIO_BYTES = 25 * 1024 * 1024;
+if (PL.playlist !== undefined && !Array.isArray(PL.playlist)) fail('playlist: must be an array');
+(Array.isArray(PL.playlist) ? PL.playlist : []).forEach(function (t, i) {
+  var who = 'playlist[' + i + ']';
+  if (!t || !String(t.title || '').trim()) fail(who + ': missing title');
+  var src = String((t && t.src) || '').trim().replace(/^\//, '');
+  if (!/^assets\/audio\/[a-z0-9._-]+\.(m4a|mp3|ogg|opus|aac|wav)$/i.test(src)) {
+    fail(who + ': src must be a local file under assets/audio/ (.m4a, .mp3, .ogg, .opus, .aac, .wav), got ' + JSON.stringify(t && t.src));
+  } else {
+    var audioFull = path.resolve(root, src);
+    if (audioFull.indexOf(root + path.sep) !== 0 || !fs.existsSync(audioFull) || !fs.statSync(audioFull).isFile()) {
+      fail(who + ': audio file not found: ' + src);
+    } else {
+      var st = fs.statSync(audioFull);
+      if (st.size === 0) fail(who + ': audio file is empty: ' + src);
+      else if (st.size > MAX_AUDIO_BYTES) fail(who + ': audio file exceeds 25 MB (' + st.size + ' bytes); compress to .m4a or .mp3: ' + src);
+    }
+  }
+  if (t && t.duration !== undefined && String(t.duration).trim() !== '' && !/^\d{1,2}:[0-5]\d$/.test(String(t.duration).trim())) {
+    fail(who + ': duration must be M:SS or MM:SS, got ' + JSON.stringify(t.duration));
+  }
+  if (t && t.cover !== undefined && String(t.cover).trim() !== '') {
+    var cov = String(t.cover).trim();
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(cov)) fail(who + ': cover must be a local path, got ' + JSON.stringify(t.cover));
+    else {
+      var covFull = path.resolve(root, cov.replace(/^\//, ''));
+      if (covFull.indexOf(root + path.sep) !== 0 || !fs.existsSync(covFull) || !fs.statSync(covFull).isFile()) {
+        fail(who + ': cover file not found: ' + cov);
+      }
+    }
+  }
+  if (t && t.streamUrl !== undefined && String(t.streamUrl).trim() !== '') {
+    var su;
+    try { su = new URL(String(t.streamUrl).trim()); } catch (e) { su = null; }
+    if (!su || su.protocol !== 'https:') fail(who + ': streamUrl must be an https:// URL, got ' + JSON.stringify(t.streamUrl));
+  }
+  if (t && t.peaks !== undefined) {
+    if (!Array.isArray(t.peaks) || t.peaks.length !== 28 || !t.peaks.every(function (n) { return typeof n === 'number' && isFinite(n) && n >= 0 && n <= 1; })) {
+      fail(who + ': peaks must be an array of 28 numbers between 0 and 1');
+    }
+  }
+});
+
 (PL.listen || []).forEach(function (t, i) {
   if (!t || !validPlayerUrl(t.url || t.embed)) fail('listen[' + i + ']: unsupported player URL ' + JSON.stringify(t && (t.url || t.embed)));
 });
@@ -266,9 +309,12 @@ while ((match = cardRe.exec(html)) !== null) {
   }
 }
 if (!count) fail('No .band-member items found in index.html');
+if (!/<aside\b[^>]*\bdata-player\b[^>]*>[\s\S]*?<audio\b[^>]*\bpreload="none"[^>]*\bdata-player-audio\b/i.test(html)) {
+  fail('Missing <aside ... data-player> with <audio preload="none" data-player-audio> in index.html');
+}
 
 if (errors.length) {
   console.error('Site check failed:\n- ' + errors.join('\n- '));
   process.exit(1);
 }
-console.log('OK: syntax, site-data (' + (PL.shows || []).length + ' shows, ' + (PL.photos || []).length + ' photos), and copy sync (' + count + ' band members, ' + totalMemberPoses + ' portrait poses) passed.');
+console.log('OK: syntax, site-data (' + (PL.shows || []).length + ' shows, ' + (PL.photos || []).length + ' photos, ' + (PL.playlist || []).length + ' playlist tracks), and copy sync (' + count + ' band members, ' + totalMemberPoses + ' portrait poses) passed.');

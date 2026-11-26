@@ -46,6 +46,26 @@ window.PL = {
   ],
 
   /*
+   * PLAYLIST (Floating Music Player)
+   * Songs for the floating "Spinning 45" player in the corner of the page.
+   * Audio loads only when the visitor presses play. Leave empty to hide the player.
+   * Put compressed .m4a or .mp3 files (160–192 kbps, ~3–5 MB each) in assets/audio/.
+   *
+   *   title        "Track title"                         required
+   *   src          "assets/audio/track-slug.m4a"         required (local path under assets/audio/)
+   *   credits      "Tiffany Baucum · Joren Cain"         optional subtitle
+   *   duration     "3:48"                                optional display length before audio loads
+   *   cover        "assets/img/covers/track.webp"        optional square sleeve art (defaults to PL monogram)
+   *   streamUrl    "https://open.spotify.com/track/..."  optional streaming link shown in expanded card
+   *   streamLabel  "Spotify"                             optional link label (inferred from URL when omitted)
+   *   peaks        [0.25, 0.6, ...]                      optional 28 bar heights (0..1); auto-sculpted if omitted
+   *
+   * Example:
+   *   { title: "Song title", src: "assets/audio/song-title.m4a", credits: "", duration: "3:48" },
+   */
+  playlist: [],
+
+  /*
    * LISTEN (Phase 2)
    * One entry per track, album or playlist. Players load only when the
    * visitor presses play. The section appears once there is one entry.

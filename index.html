@@ -288,6 +288,69 @@
   </div>
 </footer>
 
+<aside class="player" id="music-player" aria-label="Music player" hidden data-player>
+  <audio preload="none" data-player-audio></audio>
+
+  <div class="player__pill" data-player-pill>
+    <button class="player__open" type="button" aria-expanded="false" aria-controls="player-card" data-player-open>
+      <span class="player__disc" aria-hidden="true">
+        <span class="player__disc-label" data-player-pill-label></span>
+      </span>
+      <span class="player__pill-copy">
+        <span class="player__title" data-player-pill-title></span>
+        <span class="player__sub" data-player-pill-sub></span>
+      </span>
+    </button>
+    <button class="player__quick-play" type="button" aria-label="Play" data-player-toggle>
+      <svg class="player__icon-play" aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3.5 2.2v9.6L11.5 7z"/></svg>
+      <svg class="player__icon-pause" aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3 2.5h2.6v9H3zm5.4 0H11v9H8.4z"/></svg>
+    </button>
+    <span class="player__rail" aria-hidden="true"><span class="player__rail-fill"></span></span>
+  </div>
+
+  <div class="player__card" id="player-card" hidden data-player-card>
+    <div class="player__head">
+      <div class="player__turntable" aria-hidden="true">
+        <div class="player__sleeve" data-player-sleeve>
+          <span class="player__monogram">PL</span>
+        </div>
+        <div class="player__disc player__disc--card">
+          <span class="player__disc-label" data-player-card-label></span>
+        </div>
+      </div>
+      <div class="player__meta">
+        <p class="player__card-title" data-player-card-title></p>
+        <p class="player__card-credits" hidden data-player-card-credits></p>
+        <a class="player__stream" hidden rel="noopener" target="_blank" data-player-stream></a>
+      </div>
+      <button class="icon-btn icon-btn--light player__close" type="button" aria-label="Minimize music player" data-player-close>
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5.5L7 9.5l4-4"/></svg>
+      </button>
+    </div>
+
+    <div class="player__wave-wrap">
+      <div class="player__wave" aria-hidden="true" data-player-wave></div>
+      <input class="player__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek track position" data-player-seek>
+    </div>
+
+    <div class="player__controls">
+      <span class="player__time" data-player-elapsed>0:00</span>
+      <div class="player__transport">
+        <button class="player__step" type="button" aria-label="Previous track" data-player-prev>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 3.5h1.6v9H3v-9zm2.8 4.5L13 3.5v9L5.8 8z"/></svg>
+        </button>
+        <button class="player__main-play" type="button" aria-label="Play" data-player-main-toggle>Play</button>
+        <button class="player__step" type="button" aria-label="Next track" data-player-next>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.4 3.5H13v9h-1.6v-9zM3 12.5v-9L10.2 8 3 12.5z"/></svg>
+        </button>
+      </div>
+      <span class="player__time player__time--end" data-player-duration>--:--</span>
+    </div>
+
+    <ol class="player__queue" aria-label="Playlist tracks" data-player-queue></ol>
+  </div>
+</aside>
+
 <dialog class="band-member-dialog" aria-labelledby="band-member-dialog-name" data-band-member-dialog>
   <div class="band-member-dialog__card" data-band-member-card>
     <button class="icon-btn band-member-dialog__close" type="button" aria-label="Close" data-band-member-close>
