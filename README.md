@@ -13,6 +13,7 @@ Everything that changes lives in one file: **`data/site-data.js`**. Each block i
 | Show dates | `shows` — one line per show (`date, venue, city, time, support, url, linkText, status`). Past dates move to "Past Performances" automatically. |
 | Gallery photos | `photos` — add files under `assets/img/gallery/` and list them. The Photography section appears once there are two. |
 | Social links | `social` — the Instagram, YouTube and Facebook URLs. They show in the header, the phone menu and the footer. |
+| Floating music player | `playlist` — put compressed `.m4a` or `.mp3` files under `assets/audio/` and list them. The floating Spinning 45 player appears once there is one entry. |
 | Music, videos, press kit | `listen` and `watch` take ordinary share links from Spotify, Apple Music, SoundCloud, Bandcamp (its embed link) and YouTube (standard videos appear in a `16:9` grid; `/shorts/` links — or `reel: true` — appear in a vertical `9:16` Reels row); `press` takes the PDF's path. Each section appears once it has an entry. |
 | Contact address | `contact.email` |
 
@@ -23,6 +24,7 @@ The bio, member names and roles are approved copy and live in `index.html`. Memb
 ## What still needs supplying
 
 - **Hero photo.** Until it exists the backdrop is an aubergine gradient. `index.html` has a comment showing where the photo goes.
+- **Songs for the floating music player** (compressed `.m4a` or `.mp3` files in `assets/audio/`, listed in `playlist` in `data/site-data.js`).
 - **Gallery photos**, with photographer credits and usage rights (one mural group photo is in `data/site-data.js`; the Photography section appears once a second photo is added).
 - **Contact form.** It opens the visitor's own email app with the message filled in, addressed to phantomlimbs62@gmail.com. No email service or server code is involved. Visitors with no email app set up can copy the message and paste it into webmail. The form also carries a hidden trap field named `website`.
 - **An SVG master of the logo.**
@@ -54,8 +56,9 @@ Search and sharing point at `https://www.phantomlimbsband.com/`. If the address 
 index.html            page structure and approved copy
 vercel.json           hosting settings
 assets/css/styles.css design tokens at the top, then one block per section
-assets/js/main.js     behaviour: scroll wash, nav, shows list, gallery viewer, form
+assets/js/main.js     behaviour: scroll wash, nav, floating music player, shows list, gallery viewer, form
 data/site-data.js     the content you edit
+assets/audio/         playlist audio files (.m4a / .mp3, optional)
 assets/img/           logo, group photo, share image, icons (browser tab: the logo itself; phone home screen: the logo on aubergine)
 ```
 
