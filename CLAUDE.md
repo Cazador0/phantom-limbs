@@ -71,7 +71,7 @@ If you cannot open a browser, say so in the pull request. Do not describe a visu
 
 ## Delivering a change
 
-- Branch from `main` as `claude/<topic>` and open a pull request. One concern per pull request.
+- Branch from `main` as `<topic>` and open a pull request. One concern per pull request.
 - Put the agreed "done when" checks at the top of the description. Follow them with what changed and why, how to check it by hand, and what you could not verify.
 - The maintainer reviews the preview and merges.
 - When a change makes a sentence in `README.md` untrue, correct the README in the same pull request.
